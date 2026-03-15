@@ -13,6 +13,7 @@
   })();
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Pinyon+Script&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.3/dist/dotlottie-wc.js" type="module"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,7 +24,7 @@
     /* shared */
     --rose:       #c0446a;
     --rose-light: #e07898;
-    --gold:       #b07830;
+    --gold:       #b07830;        
     --gold-light: #d4a450;
     --transition-duration: 0.7s;
   }
@@ -755,6 +756,7 @@
   @keyframes tapRipple {
     to { transform:translate(-50%,-50%) scale(6); opacity:0; }
   }
+
   /* ══════════════════════════════
      SHAKE HINT
   ══════════════════════════════ */
@@ -795,9 +797,22 @@
     transition: color 0.5s;
   }
 
-  /* ══════════════════════════════
-     CONFETTI PIECE
-  ══════════════════════════════ */
+  .tap-confetti-btn {
+    background: none;
+    border: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+    font-style: italic;
+    color: var(--rose-light);
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    padding: 0.4rem 0.8rem;
+    border-bottom: 1px dashed var(--rose-light);
+    opacity: 0.75;
+    transition: opacity 0.2s, color 0.4s, border-color 0.4s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .tap-confetti-btn:active { opacity: 1; transform: scale(0.96); }
   .confetti-piece {
     position: fixed;
     pointer-events: none;
@@ -820,12 +835,588 @@
     transition: opacity 0.08s ease;
   }
   #shake-flash.flash { opacity: 1; }
+
+  /* ══════════════════════════════
+     SHUTTUMANI SECTION
+  ══════════════════════════════ */
+  #shuttumani-section {
+    text-align: center;
+    gap: 1.6rem;
+    background: linear-gradient(180deg, transparent, var(--section-grad), transparent);
+  }
+
+  .shuttumani-lottie {
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .shuttumani-lottie.visible { opacity: 1; transform: scale(1); }
+
+  .shuttumani-hey {
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(2.8rem, 13vw, 5rem);
+    line-height: 1.1;
+    background: linear-gradient(140deg, var(--name-from), var(--name-mid), var(--name-to), var(--name-from));
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
+  }
+  .shuttumani-hey.visible { opacity: 1; transform: translateY(0); }
+  [data-theme="light"] .shuttumani-hey { filter: drop-shadow(0 2px 12px rgba(192,68,106,0.18)); }
+  [data-theme="dark"]  .shuttumani-hey { filter: drop-shadow(0 0 24px rgba(192,68,106,0.45)); }
+
+  .shuttumani-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-soft);
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.8s ease 0.25s, transform 0.8s ease 0.25s, color 0.5s;
+  }
+  .shuttumani-sub.visible { opacity: 1; transform: translateY(0); }
+
+  .lets-check-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 4.5vw, 1.2rem);
+    font-style: italic;
+    letter-spacing: 0.06em;
+    color: #fff5f8;
+    background: linear-gradient(135deg, #c0446a, #d4608a, #b07830, #c0446a);
+    background-size: 250%;
+    animation: shimmer 4s linear infinite;
+    border: none;
+    border-radius: 50px;
+    padding: 0.85rem 2.2rem;
+    cursor: pointer;
+    box-shadow: 0 6px 28px rgba(192,68,106,0.35), 0 2px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    opacity: 0;
+    transform: translateY(14px) scale(0.95);
+    transition: opacity 0.8s ease 0.4s, transform 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.4s, box-shadow 0.2s;
+  }
+  .lets-check-btn.visible { opacity: 1; transform: translateY(0) scale(1); }
+  .lets-check-btn:hover  { transform: translateY(-2px) scale(1.04); box-shadow: 0 10px 36px rgba(192,68,106,0.45); }
+  .lets-check-btn:active { transform: scale(0.96); box-shadow: 0 4px 14px rgba(192,68,106,0.3); }
+
+  /* ══════════════════════════════
+     CUTENESS METER OVERLAY
+  ══════════════════════════════ */
+  #cuteness-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.2rem;
+    padding: 2.5rem 1.8rem;
+    background: var(--bg);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    overflow: hidden;
+  }
+  #cuteness-overlay.active { opacity: 1; pointer-events: auto; }
+
+  .cm-title {
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(2rem, 9vw, 3.4rem);
+    line-height: 1.25;
+    text-align: center;
+    background: linear-gradient(140deg, var(--name-from), var(--name-mid), var(--name-to), var(--name-from));
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+  }
+  [data-theme="light"] .cm-title { filter: drop-shadow(0 2px 10px rgba(192,68,106,0.18)); }
+  [data-theme="dark"]  .cm-title { filter: drop-shadow(0 0 22px rgba(192,68,106,0.45)); }
+
+  .cm-emoji-row {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 1.6rem;
+    animation: emojiFloat 2.2s ease-in-out infinite alternate;
+  }
+  @keyframes emojiFloat {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-8px); }
+  }
+
+  .cm-track-wrap { width: min(340px, 88vw); display: flex; flex-direction: column; gap: 0.7rem; }
+
+  .cm-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .cm-track {
+    width: 100%;
+    height: 22px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.12);
+  }
+
+  .cm-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #e07898, #c0446a, #d4a450, #e07898);
+    background-size: 300%;
+    animation: shimmer 2.5s linear infinite;
+    box-shadow: 0 0 12px rgba(192,68,106,0.5);
+    transition: width 0.05s linear;
+  }
+  .cm-bar.overflow {
+    background: linear-gradient(90deg, #ff6bb5, #ff2d7a, #ffb830, #ff2d7a, #ff6bb5);
+    background-size: 300%;
+    box-shadow: 0 0 22px rgba(255,45,122,0.7), 0 0 8px rgba(255,184,48,0.5);
+  }
+
+  .cm-percent {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 15vw, 6rem);
+    font-weight: 300;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    transition: color 0.3s, text-shadow 0.3s;
+  }
+  .cm-percent span { font-size: 0.5em; color: var(--text-muted); vertical-align: middle; }
+  .cm-percent.overflow { color: #ff2d7a; text-shadow: 0 0 28px rgba(255,45,122,0.55); }
+
+  .cm-warning {
+    position: fixed;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #ff2d7a, #c0446a);
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 5vw, 1.3rem);
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 1rem 2.5rem;
+    border-radius: 18px 18px 0 0;
+    white-space: nowrap;
+    box-shadow: 0 -6px 36px rgba(255,45,122,0.55);
+    transition: bottom 0.6s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .cm-warning.show { bottom: 0; }
+
+  @keyframes screenShake {
+    0%,100% { transform: translate(0,0) rotate(0deg); }
+    10%      { transform: translate(-7px, 3px) rotate(-0.6deg); }
+    20%      { transform: translate(7px, -4px) rotate(0.6deg); }
+    30%      { transform: translate(-5px, 6px) rotate(-0.4deg); }
+    40%      { transform: translate(8px, -3px) rotate(0.7deg); }
+    50%      { transform: translate(-5px, 5px) rotate(-0.4deg); }
+    60%      { transform: translate(6px, -6px) rotate(0.5deg); }
+    70%      { transform: translate(-7px, 3px) rotate(-0.5deg); }
+    80%      { transform: translate(5px, -2px) rotate(0.3deg); }
+    90%      { transform: translate(-3px, 4px) rotate(-0.2deg); }
+  }
+  body.shaking { animation: screenShake 0.9s cubic-bezier(0.36,0.07,0.19,0.97); }
+
+  /* ══════════════════════════════
+     COUNTDOWN OVERLAY
+  ══════════════════════════════ */
+  #countdown-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.2rem;
+    padding: 2rem 1.5rem;
+    background: #0a0005;
+    overflow: hidden;
+  }
+
+  /* soft floating orbs behind overlay */
+  #countdown-overlay::before,
+  #countdown-overlay::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  #countdown-overlay::before {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(192,68,106,0.28) 0%, transparent 70%);
+    top: -80px; left: -80px;
+    animation: orbDrift1 9s ease-in-out infinite alternate;
+  }
+  #countdown-overlay::after {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(176,120,48,0.2) 0%, transparent 70%);
+    bottom: -60px; right: -60px;
+    animation: orbDrift2 11s ease-in-out infinite alternate;
+  }
+  @keyframes orbDrift1 { to { transform: translate(60px, 80px); } }
+  @keyframes orbDrift2 { to { transform: translate(-50px, -60px); } }
+
+  .cd-petals {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .cd-petal {
+    position: absolute;
+    font-size: 1.4rem;
+    opacity: 0;
+    animation: petalFall linear infinite;
+  }
+  @keyframes petalFall {
+    0%   { opacity: 0; transform: translateY(-20px) rotate(0deg); }
+    10%  { opacity: 0.55; }
+    90%  { opacity: 0.4; }
+    100% { opacity: 0; transform: translateY(100vh) rotate(380deg); }
+  }
+
+  .cd-top-badge {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.75rem, 3.5vw, 0.9rem);
+    letter-spacing: 0.22em;
+    color: #e07898;
+    text-transform: uppercase;
+    opacity: 0.75;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cd-title {
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(2.6rem, 12vw, 4.8rem);
+    line-height: 1.1;
+    background: linear-gradient(140deg, #fde8f0, #e8c07a, #e07898, #fde8f0);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    filter: drop-shadow(0 0 28px rgba(192,68,106,0.4));
+  }
+
+  .cd-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.8rem, 3.8vw, 0.95rem);
+    color: #b07898;
+    letter-spacing: 0.1em;
+    font-style: italic;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    margin-top: -1.2rem;
+  }
+
+  .cd-boxes {
+    display: flex;
+    gap: clamp(0.6rem, 2.5vw, 1.1rem);
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cd-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: clamp(62px, 16vw, 86px);
+  }
+
+  .cd-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 10vw, 4rem);
+    font-weight: 300;
+    line-height: 1;
+    color: #fde8f0;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(192,68,106,0.22);
+    border-radius: 16px;
+    width: 100%;
+    text-align: center;
+    padding: 0.55rem 0.3rem 0.4rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+    transition: color 0.3s;
+    letter-spacing: -0.02em;
+  }
+
+  .cd-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.6rem, 2.8vw, 0.72rem);
+    letter-spacing: 0.18em;
+    color: #b07898;
+    text-transform: uppercase;
+  }
+
+  .cd-colon {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    color: rgba(192,68,106,0.5);
+    align-self: flex-start;
+    margin-top: 0.5rem;
+    position: relative;
+    z-index: 1;
+    animation: colonBlink 1s step-end infinite;
+  }
+  @keyframes colonBlink {
+    0%,100% { opacity: 0.5; }
+    50%      { opacity: 0.1; }
+  }
+
+  .cd-divider {
+    width: clamp(160px, 60vw, 260px);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(192,68,106,0.3), rgba(176,120,48,0.25), rgba(192,68,106,0.3), transparent);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* PIN area */
+  .cd-pin-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cd-pin-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.72rem, 3.2vw, 0.85rem);
+    letter-spacing: 0.18em;
+    color: #b07898;
+    text-transform: uppercase;
+    font-style: italic;
+  }
+
+  .cd-pin-dots {
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cd-pin-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(192,68,106,0.4);
+    background: transparent;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .cd-pin-dot.filled {
+    background: #c0446a;
+    border-color: #e07898;
+    box-shadow: 0 0 8px rgba(192,68,106,0.6);
+  }
+
+  .cd-pin-input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .cd-pin-tap {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.68rem, 3vw, 0.8rem);
+    color: #7a3050;
+    font-style: italic;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* keypad */
+  .cd-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.55rem;
+    width: clamp(200px, 70vw, 260px);
+    position: relative;
+    z-index: 1;
+  }
+
+  .cd-key {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(192,68,106,0.18);
+    border-radius: 12px;
+    color: #fde8f0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 6vw, 1.8rem);
+    font-weight: 300;
+    padding: 0.75rem 0;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    user-select: none;
+  }
+  .cd-key:active, .cd-key.pressed {
+    background: rgba(192,68,106,0.18);
+    transform: scale(0.93);
+    box-shadow: 0 0 12px rgba(192,68,106,0.35);
+  }
+  .cd-key.key-del {
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    letter-spacing: 0.05em;
+    color: #b07898;
+  }
+  .cd-key.key-zero { grid-column: 2; }
+
+  .cd-pin-error {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.72rem, 3.2vw, 0.85rem);
+    color: #e07898;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    height: 1.1em;
+    position: relative;
+    z-index: 1;
+  }
+  .cd-pin-error.show { opacity: 1; }
+
+  /* unlock animation */
+  #countdown-overlay.unlocking {
+    animation: overlayUnlock 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  @keyframes overlayUnlock {
+    0%   { opacity: 1; transform: scale(1); }
+    60%  { opacity: 1; transform: scale(1.04); }
+    100% { opacity: 0; transform: scale(1.08); pointer-events: none; }
+  }
 </style>
 </head>
 <body>
 
+<!-- ══════════════════════════════
+     COUNTDOWN OVERLAY
+══════════════════════════════ -->
+<script>var SKIP_TO_REVEAL = true;</script> <!-- set false when giving to sister -->
+<div id="countdown-overlay">
+  <!-- floating petals -->
+  <div class="cd-petals" id="cd-petals"></div>
+
+  <div class="cd-top-badge">something special awaits</div>
+
+  <div class="cd-title">A little surprise…</div>
+  <div class="cd-subtitle">opens on April 7th at 11:55 PM</div>
+
+  <!-- countdown boxes -->
+  <div class="cd-boxes">
+    <div class="cd-box">
+      <div class="cd-num" id="cd-days">00</div>
+      <div class="cd-label">days</div>
+    </div>
+    <div class="cd-colon">:</div>
+    <div class="cd-box">
+      <div class="cd-num" id="cd-hours">00</div>
+      <div class="cd-label">hours</div>
+    </div>
+    <div class="cd-colon">:</div>
+    <div class="cd-box">
+      <div class="cd-num" id="cd-mins">00</div>
+      <div class="cd-label">mins</div>
+    </div>
+    <div class="cd-colon">:</div>
+    <div class="cd-box">
+      <div class="cd-num" id="cd-secs">00</div>
+      <div class="cd-label">secs</div>
+    </div>
+  </div>
+
+  <div class="cd-divider"></div>
+
+  <!-- PIN section -->
+  <div class="cd-pin-area">
+    <div class="cd-pin-label">or enter your secret code</div>
+    <div class="cd-pin-dots" id="cd-pin-dots">
+      <div class="cd-pin-dot" id="dot-0"></div>
+      <div class="cd-pin-dot" id="dot-1"></div>
+      <div class="cd-pin-dot" id="dot-2"></div>
+      <div class="cd-pin-dot" id="dot-3"></div>
+    </div>
+  </div>
+
+  <!-- keypad -->
+  <div class="cd-keypad" id="cd-keypad">
+    <button class="cd-key" data-digit="1">1</button>
+    <button class="cd-key" data-digit="2">2</button>
+    <button class="cd-key" data-digit="3">3</button>
+    <button class="cd-key" data-digit="4">4</button>
+    <button class="cd-key" data-digit="5">5</button>
+    <button class="cd-key" data-digit="6">6</button>
+    <button class="cd-key" data-digit="7">7</button>
+    <button class="cd-key" data-digit="8">8</button>
+    <button class="cd-key" data-digit="9">9</button>
+    <button class="cd-key key-zero" data-digit="0">0</button>
+    <button class="cd-key key-del" data-action="del">del</button>
+  </div>
+
+  <div class="cd-pin-error" id="cd-pin-error">hmm, that's not quite right ✦</div>
+</div>
+<script>if (SKIP_TO_REVEAL) document.getElementById('countdown-overlay').style.display = 'none';</script>
+
 <!-- Shake flash -->
 <div id="shake-flash"></div>
+
+<!-- ═══ CUTENESS METER OVERLAY ═══ -->
+<div id="cuteness-overlay">
+  <p class="cm-title">Measuring your cuteness…<br>keep smiling 🌸</p>
+  <div class="cm-emoji-row">🌷 ✨ 🎀 ✨ 🌷</div>
+  <div class="cm-percent" id="cm-percent">0<span>%</span></div>
+  <div class="cm-track-wrap">
+    <div class="cm-track">
+      <div class="cm-bar" id="cm-bar"></div>
+    </div>
+    <div class="cm-labels"><span>0%</span><span>50%</span><span>100%</span><span>150%</span></div>
+  </div>
+</div>
+<div class="cm-warning" id="cm-warning">⚠️ TOO CUTE TO HANDLE ⚠️</div>
 
 <!-- Scroll progress bar -->
 <div id="progress-bar"></div>
@@ -939,7 +1530,27 @@
   <div class="shake-hint" data-reveal>
     <div class="shake-phone-icon">📱</div>
     <p class="shake-text">Shake your phone to see some magic</p>
+    <button class="tap-confetti-btn" onclick="launchConfetti()">or just tap here ✨</button>
   </div>
+</section>
+
+<!-- ═══ SHUTTUMANI SECTION ═══ -->
+<section class="page" id="shuttumani-section">
+
+  <dotlottie-wc
+    class="shuttumani-lottie"
+    src="https://lottie.host/483c556b-60c0-45aa-bc1a-04ad580a8998/Yis2KOGO9U.lottie"
+    style="width:300px;height:300px"
+    autoplay loop>
+  </dotlottie-wc>
+
+  <p class="shuttumani-hey" data-reveal>Hey shuttumani</p>
+  <p class="shuttumani-sub" data-reveal>Do you know how cute you are? 🌸</p>
+
+  <button class="lets-check-btn" data-reveal onclick="startCutenessMeter()">
+    Let's check ✨🎀
+  </button>
+
 </section>
 
 <script>
@@ -1244,6 +1855,7 @@ const observer = new IntersectionObserver(entries=>{
   });
 },{threshold:0.2});
 document.querySelectorAll('[data-reveal]').forEach(el=>observer.observe(el));
+document.querySelectorAll('.shuttumani-lottie').forEach(el=>observer.observe(el));
 
 /* ══════════════════════════
    SCROLL PROGRESS BAR
@@ -1381,11 +1993,11 @@ function onInteract(x,y,fromBtn){
 document.addEventListener('touchstart',e=>{
   for(const t of e.touches){
     const el=document.elementFromPoint(t.clientX,t.clientY);
-    onInteract(t.clientX,t.clientY, el && (el.closest('#theme-toggle') || el.closest('#music-btn')));
+    onInteract(t.clientX,t.clientY, el && (el.closest('#theme-toggle') || el.closest('#music-btn') || el.closest('.tap-confetti-btn')));
   }
 },{passive:true});
 document.addEventListener('click',e=>{
-  onInteract(e.clientX,e.clientY, e.target.closest('#theme-toggle') || e.target.closest('#music-btn'));
+  onInteract(e.clientX,e.clientY, e.target.closest('#theme-toggle') || e.target.closest('#music-btn') || e.target.closest('.tap-confetti-btn'));
 });
 
 /* ══════════════════════════
@@ -1520,6 +2132,216 @@ document.addEventListener('click',      requestMotionPermission, { once: true })
 document.addEventListener('keydown', e=>{
   if(e.code === 'Space') launchConfetti();
 });
+</script>
+
+<!-- ══ CUTENESS METER SCRIPT ══ -->
+<script>
+function startCutenessMeter() {
+  const overlay  = document.getElementById('cuteness-overlay');
+  const bar      = document.getElementById('cm-bar');
+  const pctEl    = document.getElementById('cm-percent');
+  const warning  = document.getElementById('cm-warning');
+
+  // reset state
+  bar.style.width = '0%';
+  bar.classList.remove('overflow');
+  pctEl.classList.remove('overflow');
+  pctEl.innerHTML = '0<span>%</span>';
+  warning.classList.remove('show');
+
+  overlay.classList.add('active');
+
+  const TARGET   = 150;
+  const DURATION = 3800; // ms to reach 150%
+  const start    = performance.now();
+  let   done     = false;
+
+  function step(now) {
+    if (done) return;
+    const elapsed  = now - start;
+    const progress = Math.min(elapsed / DURATION, 1);
+    // ease-in-out curve
+    const eased    = progress < 0.5
+      ? 2 * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+    const value    = Math.round(eased * TARGET);
+
+    // bar fills: clamp visual width to 100% track, but bar turns hot-pink past 100
+    const barPct   = Math.min(value, 100);
+    bar.style.width = barPct + '%';
+    pctEl.innerHTML = value + '<span>%</span>';
+
+    if (value >= 100) {
+      bar.classList.add('overflow');
+      pctEl.classList.add('overflow');
+    }
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      // maxed out — show warning + shake
+      done = true;
+      bar.style.width = '100%';
+      pctEl.innerHTML = '150<span>%</span>';
+
+      setTimeout(() => {
+        warning.classList.add('show');
+        document.body.classList.remove('shaking');
+        void document.body.offsetWidth; // reflow to restart anim
+        document.body.classList.add('shaking');
+        document.body.addEventListener('animationend', () => {
+          document.body.classList.remove('shaking');
+        }, { once: true });
+      }, 150);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+</script>
+
+<!-- ══ COUNTDOWN OVERLAY SCRIPT ══ -->
+<script>
+(function () {
+  const UNLOCK_DATE = new Date(2026, 3, 7, 23, 55, 0); // April 7 2026 23:55:00 local time
+  const SECRET_PIN  = '2241';
+
+  const overlay  = document.getElementById('countdown-overlay');
+  if (SKIP_TO_REVEAL) return;
+  const daysEl   = document.getElementById('cd-days');
+  const hoursEl  = document.getElementById('cd-hours');
+  const minsEl   = document.getElementById('cd-mins');
+  const secsEl   = document.getElementById('cd-secs');
+  const errorEl  = document.getElementById('cd-pin-error');
+  const petals   = document.getElementById('cd-petals');
+
+  let pinBuffer = '';
+
+  /* ── petals ── */
+  const PETAL_CHARS = ['🌸','🌷','✦','❀','✿','❋','🌺','·'];
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('span');
+    p.className = 'cd-petal';
+    p.textContent = PETAL_CHARS[Math.floor(Math.random() * PETAL_CHARS.length)];
+    p.style.left     = Math.random() * 100 + 'vw';
+    p.style.fontSize = (0.9 + Math.random() * 1.2) + 'rem';
+    p.style.animationDuration  = (9 + Math.random() * 16) + 's';
+    p.style.animationDelay     = -(Math.random() * 18) + 's';
+    p.style.opacity = 0;
+    petals.appendChild(p);
+  }
+
+  /* ── countdown ── */
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    const now  = new Date();
+    const diff = UNLOCK_DATE - now;
+
+    if (diff <= 0) {
+      unlockSite();
+      return;
+    }
+
+    const totalSecs = Math.floor(diff / 1000);
+    const s = totalSecs % 60;
+    const m = Math.floor(totalSecs / 60) % 60;
+    const h = Math.floor(totalSecs / 3600) % 24;
+    const d = Math.floor(totalSecs / 86400);
+
+    daysEl.textContent  = pad(d);
+    hoursEl.textContent = pad(h);
+    minsEl.textContent  = pad(m);
+    secsEl.textContent  = pad(s);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+
+  /* ── PIN keypad ── */
+  function updateDots() {
+    for (let i = 0; i < 4; i++) {
+      const dot = document.getElementById('dot-' + i);
+      dot.classList.toggle('filled', i < pinBuffer.length);
+    }
+  }
+
+  function shakeDots() {
+    const dotsEl = document.getElementById('cd-pin-dots');
+    dotsEl.style.animation = 'none';
+    dotsEl.offsetHeight; // reflow
+    dotsEl.style.animation = 'pinShake 0.45s ease';
+  }
+
+  /* inject pin shake keyframe */
+  const shakeStyle = document.createElement('style');
+  shakeStyle.textContent = `
+    @keyframes pinShake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-8px); }
+      40%     { transform: translateX(8px); }
+      60%     { transform: translateX(-5px); }
+      80%     { transform: translateX(5px); }
+    }`;
+  document.head.appendChild(shakeStyle);
+
+  function pressDigit(d) {
+    if (pinBuffer.length >= 4) return;
+    pinBuffer += d;
+    updateDots();
+
+    if (pinBuffer.length === 4) {
+      if (pinBuffer === SECRET_PIN) {
+        unlockSite();
+      } else {
+        errorEl.classList.add('show');
+        shakeDots();
+        setTimeout(() => {
+          pinBuffer = '';
+          updateDots();
+          errorEl.classList.remove('show');
+        }, 1200);
+      }
+    }
+  }
+
+  function pressDelete() {
+    if (pinBuffer.length > 0) {
+      pinBuffer = pinBuffer.slice(0, -1);
+      updateDots();
+      errorEl.classList.remove('show');
+    }
+  }
+
+  document.getElementById('cd-keypad').addEventListener('click', function (e) {
+    const btn = e.target.closest('.cd-key');
+    if (!btn) return;
+    btn.classList.add('pressed');
+    setTimeout(() => btn.classList.remove('pressed'), 150);
+    const action = btn.dataset.action;
+    if (action === 'del') {
+      pressDelete();
+    } else {
+      pressDigit(btn.dataset.digit);
+    }
+  });
+
+  /* physical keyboard support */
+  document.addEventListener('keydown', function (e) {
+    if (!overlay.isConnected || overlay.classList.contains('unlocking')) return;
+    if (/^[0-9]$/.test(e.key)) { pressDigit(e.key); }
+    else if (e.key === 'Backspace') { pressDelete(); }
+  });
+
+  /* ── unlock ── */
+  function unlockSite() {
+    overlay.classList.add('unlocking');
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      overlay.remove();
+    }, 900);
+  }
+})();
 </script>
 </body>
 </html>
