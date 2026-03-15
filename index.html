@@ -2496,17 +2496,14 @@ document.addEventListener('keydown', e=>{
   const AUTO_MS  = 4200;
   const ANIM_MS  = 680;
 
-  /* ── auto-discover images from directory listing ── */
+  /* ── load images from manifest.json (works on GitHub Pages) ── */
   async function discoverImages() {
     try {
-      const res  = await fetch(IMG_DIR);
-      const html = await res.text();
-      const hrefs = [...html.matchAll(/href="([^"?#]+)"/gi)].map(m => m[1]);
-      return hrefs
-        .filter(h => IMG_EXTS.test(h))
-        .map(h => (h.startsWith('http') || h.startsWith('/')) ? h : IMG_DIR + h.replace(/^.*\//, ''));
+      const res = await fetch(IMG_DIR + 'manifest.json');
+      if (!res.ok) throw new Error('manifest not found');
+      return await res.json();
     } catch (e) {
-      console.warn('Carousel: could not auto-discover images.', e);
+      console.warn('Carousel: manifest.json not found.', e);
       return [];
     }
   }

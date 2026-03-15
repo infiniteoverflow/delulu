@@ -1,0 +1,37 @@
+name: Generate image manifest
+
+on:
+  push:
+    paths:
+      - 'IMG/**'
+      - '.github/workflows/generate-manifest.yml'
+
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate IMG/manifest.json
+        run: |
+          python3 -c "
+          import os, json
+          exts = {'.jpg','.jpeg','.png','.gif','.webp','.avif','.bmp'}
+          imgs = sorted([
+            'IMG/' + f for f in os.listdir('IMG')
+            if os.path.splitext(f)[1].lower() in exts
+          ])
+          with open('IMG/manifest.json', 'w') as f:
+              json.dump(imgs, f, indent=2)
+          print(f'Manifest updated: {len(imgs)} image(s)')
+          "
+
+      - name: Commit manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add IMG/manifest.json
+          git diff --staged --quiet || git commit -m "chore: update image manifest"
+          git push
