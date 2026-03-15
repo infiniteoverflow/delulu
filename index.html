@@ -837,6 +837,259 @@
   #shake-flash.flash { opacity: 1; }
 
   /* ══════════════════════════════
+     MEMORIES CAROUSEL
+  ══════════════════════════════ */
+  .carousel-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .carousel-title {
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(2.2rem, 10vw, 3.8rem);
+    line-height: 1.1;
+    background: linear-gradient(140deg, var(--name-from), var(--name-mid), var(--name-to), var(--name-from));
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+    text-align: center;
+  }
+  .carousel-wrap.compact .carousel-title {
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+    background: linear-gradient(140deg, #fde8f0, #e8c07a, #e07898, #fde8f0);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+  }
+
+  /* ── viewport: clips side cards at edges ── */
+  .carousel-viewport {
+    position: relative;
+    width: 100%;
+    max-width: 540px;
+    height: clamp(340px, 62vw, 500px);
+    overflow: hidden;
+  }
+  .carousel-wrap.compact .carousel-viewport {
+    height: clamp(240px, 52vw, 340px);
+    max-width: 400px;
+  }
+
+  /* Soft edge fade so peeking cards blend in */
+  .carousel-viewport::before,
+  .carousel-viewport::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 10%;
+    z-index: 20;
+    pointer-events: none;
+  }
+  .carousel-viewport::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg), transparent);
+  }
+  .carousel-viewport::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg), transparent);
+  }
+  /* compact uses dark bg */
+  .carousel-wrap.compact .carousel-viewport::before { background: linear-gradient(to right, #0a0005, transparent); }
+  .carousel-wrap.compact .carousel-viewport::after  { background: linear-gradient(to left,  #0a0005, transparent); }
+
+  /* ── individual card ── */
+  .carousel-card {
+    position: absolute;
+    /* card = 80% of viewport width, centered */
+    left: 10%;
+    width: 80%;
+    top: 0; bottom: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    will-change: transform, opacity, box-shadow;
+    transition:
+      transform  0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      opacity    0.65s ease,
+      box-shadow 0.65s ease;
+    cursor: grab;
+    user-select: none;
+  }
+  .carousel-card:active { cursor: grabbing; }
+
+  /* card states */
+  .carousel-card.state-active {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 3;
+    box-shadow: 0 28px 70px rgba(192,68,106,0.28), 0 8px 24px rgba(0,0,0,0.22);
+  }
+  .carousel-card.state-next {
+    transform: translateX(90%) scale(0.88);
+    opacity: 0.72;
+    z-index: 2;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+  }
+  .carousel-card.state-prev {
+    transform: translateX(-90%) scale(0.88);
+    opacity: 0.72;
+    z-index: 2;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+  }
+  .carousel-card.state-far-next {
+    transform: translateX(160%) scale(0.76);
+    opacity: 0;
+    z-index: 1;
+    transition: none; /* snap instantly so it's ready */
+  }
+  .carousel-card.state-far-prev {
+    transform: translateX(-160%) scale(0.76);
+    opacity: 0;
+    z-index: 1;
+    transition: none;
+  }
+  /* exit animations - card leaves with a dramatic swipe + tilt */
+  .carousel-card.exit-left {
+    transform: translateX(-115%) rotate(-6deg) scale(0.85);
+    opacity: 0;
+    z-index: 4;
+    box-shadow: none;
+  }
+  .carousel-card.exit-right {
+    transform: translateX(115%) rotate(6deg) scale(0.85);
+    opacity: 0;
+    z-index: 4;
+    box-shadow: none;
+  }
+
+  /* blurred bg layer (fills the card so image doesn't letterbox) */
+  .carousel-card-bg {
+    position: absolute;
+    inset: -12px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(22px) brightness(0.55) saturate(1.4);
+    transform: scale(1.08);
+  }
+  /* main image - shown fully, no crop */
+  .carousel-card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    -webkit-user-drag: none;
+  }
+  /* shimmer skeleton */
+  .carousel-card.loading .carousel-card-bg {
+    background: linear-gradient(90deg,
+      rgba(192,68,106,0.07) 25%,
+      rgba(192,68,106,0.15) 50%,
+      rgba(192,68,106,0.07) 75%);
+    background-size: 200%;
+    animation: skeletonShimmer 1.5s linear infinite;
+    filter: none;
+    inset: 0;
+  }
+  @keyframes skeletonShimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+
+  /* soft vignette overlay on each card */
+  .carousel-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top,  rgba(0,0,0,0.3) 0%, transparent 45%),
+      linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, transparent 30%);
+    pointer-events: none;
+  }
+
+  /* ── nav arrows ── */
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 25;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(10,0,5,0.38);
+    backdrop-filter: blur(10px);
+    color: rgba(255,255,255,0.88);
+    font-size: 1.4rem;
+    line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .carousel-btn:hover  {
+    background: rgba(192,68,106,0.6);
+    box-shadow: 0 0 18px rgba(192,68,106,0.5);
+    transform: translateY(-50%) scale(1.08);
+  }
+  .carousel-btn:active { transform: translateY(-50%) scale(0.93); }
+  .carousel-btn.prev { left: 6px; }
+  .carousel-btn.next { right: 6px; }
+
+  /* ── dots ── */
+  .carousel-dots {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+  }
+  .carousel-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    border: none;
+    background: var(--rose-pale);
+    opacity: 0.3;
+    transition: opacity 0.35s, background 0.35s, transform 0.35s, width 0.35s;
+    cursor: pointer;
+    padding: 0;
+  }
+  .carousel-dot.active {
+    opacity: 1;
+    background: var(--rose);
+    width: 22px;
+    border-radius: 999px;
+  }
+  .carousel-wrap.compact .carousel-dot { background: rgba(224,120,152,0.5); }
+  .carousel-wrap.compact .carousel-dot.active { background: #e07898; }
+
+  /* counter */
+  .carousel-counter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .carousel-wrap.compact .carousel-counter { color: rgba(176,112,144,0.8); }
+
+  /* ══════════════════════════════
+     MEMORIES SECTION (main site)
+  ══════════════════════════════ */
+  #memories-section {
+    gap: 2rem;
+    background: linear-gradient(180deg, transparent, var(--section-grad), transparent);
+  }
+
+  /* ══════════════════════════════
      SHUTTUMANI SECTION
   ══════════════════════════════ */
   #shuttumani-section {
@@ -1046,6 +1299,59 @@
   body.shaking { animation: screenShake 0.9s cubic-bezier(0.36,0.07,0.19,0.97); }
 
   /* ══════════════════════════════
+     IMAGE LIGHTBOX
+  ══════════════════════════════ */
+  #img-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999990;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: rgba(6,0,3,0.88);
+    backdrop-filter: blur(28px) saturate(1.4);
+    -webkit-backdrop-filter: blur(28px) saturate(1.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    cursor: zoom-out;
+  }
+  #img-lightbox.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #img-lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 18px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06);
+    object-fit: contain;
+    transform: scale(0.88);
+    transition: transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
+    cursor: default;
+  }
+  #img-lightbox.open img {
+    transform: scale(1);
+  }
+  #img-lightbox-close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.75);
+    font-size: 1.1rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    backdrop-filter: blur(8px);
+  }
+  #img-lightbox-close:hover { background: rgba(192,68,106,0.5); transform: scale(1.1); }
+
+  /* ══════════════════════════════
      COUNTDOWN OVERLAY
   ══════════════════════════════ */
   #countdown-overlay {
@@ -1055,11 +1361,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 2.2rem;
-    padding: 2rem 1.5rem;
+    padding: 3rem 1.5rem 3rem;
     background: #0a0005;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* soft floating orbs behind overlay */
@@ -1402,11 +1710,23 @@
   </div>
 
   <div class="cd-pin-error" id="cd-pin-error">hmm, that's not quite right ✦</div>
+
+  <div class="cd-divider"></div>
+
+  <!-- memories carousel (compact) -->
+  <div class="carousel-wrap compact" id="carousel-countdown" data-carousel></div>
+
 </div>
 <script>if (SKIP_TO_REVEAL) document.getElementById('countdown-overlay').style.display = 'none';</script>
 
 <!-- Shake flash -->
 <div id="shake-flash"></div>
+
+<!-- Image lightbox -->
+<div id="img-lightbox">
+  <button id="img-lightbox-close" aria-label="Close">✕</button>
+  <img id="img-lightbox-img" src="" alt="Full preview" />
+</div>
 
 <!-- ═══ CUTENESS METER OVERLAY ═══ -->
 <div id="cuteness-overlay">
@@ -1555,6 +1875,11 @@
     Let's check ✨🎀
   </button>
 
+</section>
+
+<!-- ═══ MEMORIES CAROUSEL ═══ -->
+<section class="page" id="memories-section">
+  <div class="carousel-wrap" id="carousel-main" data-carousel></div>
 </section>
 
 <script>
@@ -2136,6 +2461,241 @@ document.addEventListener('click',      requestMotionPermission, { once: true })
 document.addEventListener('keydown', e=>{
   if(e.code === 'Space') launchConfetti();
 });
+</script>
+
+<!-- ══ MEMORIES CAROUSEL SCRIPT ══ -->
+<script>
+(function () {
+  const IMG_DIR  = 'IMG/';
+  const IMG_EXTS = /\.(jpe?g|png|gif|webp|avif|bmp)$/i;
+  const AUTO_MS  = 4200;
+  const ANIM_MS  = 680;
+
+  /* ── auto-discover images from directory listing ── */
+  async function discoverImages() {
+    try {
+      const res  = await fetch(IMG_DIR);
+      const html = await res.text();
+      const hrefs = [...html.matchAll(/href="([^"?#]+)"/gi)].map(m => m[1]);
+      return hrefs
+        .filter(h => IMG_EXTS.test(h))
+        .map(h => (h.startsWith('http') || h.startsWith('/')) ? h : IMG_DIR + h.replace(/^.*\//, ''));
+    } catch (e) {
+      console.warn('Carousel: could not auto-discover images.', e);
+      return [];
+    }
+  }
+
+  /* ── build one carousel ── */
+  function buildCarousel(wrap, images) {
+    if (!images.length) { wrap.style.display = 'none'; return; }
+    const n = images.length;
+
+    /* title */
+    const title = document.createElement('p');
+    title.className = 'carousel-title';
+    title.textContent = 'Me with my delulu over the years';
+
+    /* viewport (clips side cards) */
+    const viewport = document.createElement('div');
+    viewport.className = 'carousel-viewport';
+
+    /* cards */
+    const cards = images.map((src, i) => {
+      const card = document.createElement('div');
+      card.className = 'carousel-card loading';
+
+      const bg = document.createElement('div');
+      bg.className = 'carousel-card-bg';
+
+      const img = document.createElement('img');
+      img.className = 'carousel-card-img';
+      img.alt = 'Memory ' + (i + 1);
+      img.draggable = false;
+      img.onload = () => {
+        card.classList.remove('loading');
+        bg.style.backgroundImage = `url('${src}')`;
+      };
+      img.onerror = () => card.classList.remove('loading');
+      img.src = src;
+
+      card.appendChild(bg);
+      card.appendChild(img);
+      viewport.appendChild(card);
+      return card;
+    });
+
+    /* nav arrows (inside viewport so z-index stacks right) */
+    const btnPrev = document.createElement('button');
+    btnPrev.className = 'carousel-btn prev';
+    btnPrev.innerHTML = '&#8249;';
+    btnPrev.setAttribute('aria-label', 'Previous');
+
+    const btnNext = document.createElement('button');
+    btnNext.className = 'carousel-btn next';
+    btnNext.innerHTML = '&#8250;';
+    btnNext.setAttribute('aria-label', 'Next');
+
+    viewport.appendChild(btnPrev);
+    viewport.appendChild(btnNext);
+
+    /* dots */
+    const dotsRow = document.createElement('div');
+    dotsRow.className = 'carousel-dots';
+    const dots = images.map((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'carousel-dot';
+      d.setAttribute('aria-label', 'Slide ' + (i + 1));
+      dotsRow.appendChild(d);
+      return d;
+    });
+
+    /* counter */
+    const counter = document.createElement('p');
+    counter.className = 'carousel-counter';
+
+    wrap.appendChild(title);
+    wrap.appendChild(viewport);
+    wrap.appendChild(dotsRow);
+    wrap.appendChild(counter);
+
+    /* ── state ── */
+    let cur = 0, isAnimating = false, timer = null;
+
+    /* Assign CSS state class based on position relative to cur */
+    function getState(i) {
+      const offset = ((i - cur) % n + n) % n;
+      if (offset === 0)        return 'state-active';
+      if (offset === 1)        return 'state-next';
+      if (offset === n - 1)   return 'state-prev';
+      if (offset <= n / 2)    return 'state-far-next';
+      return 'state-far-prev';
+    }
+
+    function applyStates(skipIndex) {
+      cards.forEach((card, i) => {
+        if (i === skipIndex) return;
+        card.className = card.className
+          .replace(/\bstate-\S+|\bexit-\S+/g, '').trim();
+        card.classList.add(getState(i));
+      });
+    }
+
+    function updateMeta() {
+      dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+      counter.textContent = (cur + 1) + ' \u2013 ' + n;
+    }
+
+    function goTo(newIdx, dir) {
+      if (isAnimating || newIdx === cur) return;
+      isAnimating = true;
+
+      const oldIdx = cur;
+      cur = newIdx;
+
+      /* 1. instantly snap any far cards to their new far positions (no transition) */
+      applyStates(oldIdx);
+
+      /* 2. exit animation on old active card */
+      cards[oldIdx].className = cards[oldIdx].className
+        .replace(/\bstate-\S+|\bexit-\S+/g, '').trim();
+      cards[oldIdx].classList.add(dir === 'next' ? 'exit-left' : 'exit-right');
+
+      updateMeta();
+
+      /* 3. after animation, put old card back in proper far slot */
+      setTimeout(() => {
+        cards[oldIdx].className = cards[oldIdx].className
+          .replace(/\bstate-\S+|\bexit-\S+/g, '').trim();
+        /* disable transition momentarily for the snap */
+        cards[oldIdx].style.transition = 'none';
+        cards[oldIdx].classList.add(getState(oldIdx));
+        cards[oldIdx].offsetWidth; // reflow
+        cards[oldIdx].style.transition = '';
+        isAnimating = false;
+      }, ANIM_MS);
+    }
+
+    function advance(dir) {
+      const next = dir === 'next' ? (cur + 1) % n : (cur - 1 + n) % n;
+      goTo(next, dir);
+    }
+
+    function startAuto() { clearInterval(timer); timer = setInterval(() => advance('next'), AUTO_MS); }
+    function pauseAuto()  { clearInterval(timer); }
+
+    /* events */
+    btnNext.addEventListener('click', () => { advance('next'); startAuto(); });
+    btnPrev.addEventListener('click', () => { advance('prev'); startAuto(); });
+    dots.forEach((d, i) => d.addEventListener('click', () => {
+      goTo(i, i > cur ? 'next' : 'prev'); startAuto();
+    }));
+
+    /* swipe */
+    let tx0 = 0, ty0 = 0;
+    viewport.addEventListener('touchstart', e => {
+      tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; pauseAuto();
+    }, { passive: true });
+    viewport.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - tx0;
+      const dy = e.changedTouches[0].clientY - ty0;
+      if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy))
+        advance(dx < 0 ? 'next' : 'prev');
+      startAuto();
+    }, { passive: true });
+
+    /* mouse drag — track distance to distinguish click vs drag */
+    let mx0 = 0, dragging = false, didDrag = false;
+    viewport.addEventListener('mousedown', e => { mx0 = e.clientX; dragging = true; didDrag = false; pauseAuto(); });
+    viewport.addEventListener('mousemove', e => { if (dragging && Math.abs(e.clientX - mx0) > 6) didDrag = true; });
+    viewport.addEventListener('mouseup',   e => {
+      if (!dragging) return; dragging = false;
+      const dx = e.clientX - mx0;
+      if (Math.abs(dx) > 36) advance(dx < 0 ? 'next' : 'prev');
+      startAuto();
+    });
+    viewport.addEventListener('mouseleave', () => { dragging = false; startAuto(); });
+
+    /* click → open lightbox (only on active card, only if not a drag) */
+    cards.forEach((card, i) => {
+      card.addEventListener('click', () => {
+        if (didDrag) { didDrag = false; return; }
+        if (i !== cur) return; // only active card triggers preview
+        openLightbox(images[i]);
+      });
+    });
+
+    /* init */
+    applyStates(-1); // set all states from scratch
+    updateMeta();
+    startAuto();
+  }
+
+  /* ── lightbox ── */
+  const lightbox    = document.getElementById('img-lightbox');
+  const lightboxImg = document.getElementById('img-lightbox-img');
+
+  function openLightbox(src) {
+    lightboxImg.src = src;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  lightbox.addEventListener('click', closeLightbox);
+  lightboxImg.addEventListener('click', e => e.stopPropagation()); // clicking image itself doesn't close
+  document.getElementById('img-lightbox-close').addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  /* ── kick off ── */
+  discoverImages().then(images => {
+    document.querySelectorAll('[data-carousel]').forEach(wrap => buildCarousel(wrap, images));
+  });
+})();
 </script>
 
 <!-- ══ CUTENESS METER SCRIPT ══ -->
