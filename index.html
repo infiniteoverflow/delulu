@@ -154,6 +154,17 @@
   }
 
   /* ══════════════════════════════
+     GLOBAL MOBILE / PERF FIXES
+  ══════════════════════════════ */
+  /* Prevent double-tap zoom on every interactive element */
+  button, a, [role="button"],
+  .carousel-card, .carousel-btn, .carousel-dot,
+  .cd-key, .lets-check-btn, .tap-confetti-btn,
+  #theme-toggle, #music-btn, #img-lightbox-close {
+    touch-action: manipulation;
+  }
+
+  /* ══════════════════════════════
      THEME TOGGLE BUTTON
   ══════════════════════════════ */
   #theme-toggle {
@@ -915,7 +926,6 @@
     top: 0; bottom: 0;
     border-radius: 24px;
     overflow: hidden;
-    will-change: transform, opacity, box-shadow;
     transition:
       transform  0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       opacity    0.65s ease,
@@ -948,13 +958,15 @@
     transform: translateX(160%) scale(0.76);
     opacity: 0;
     z-index: 1;
-    transition: none; /* snap instantly so it's ready */
+    transition: none;
+    visibility: hidden; /* don't composite off-screen cards */
   }
   .carousel-card.state-far-prev {
     transform: translateX(-160%) scale(0.76);
     opacity: 0;
     z-index: 1;
     transition: none;
+    visibility: hidden;
   }
   /* exit animations - card leaves with a dramatic swipe + tilt */
   .carousel-card.exit-left {
@@ -970,15 +982,17 @@
     box-shadow: none;
   }
 
-  /* blurred bg layer (fills the card so image doesn't letterbox) */
+  /* blurred bg layer — only render on the active card to avoid GPU overload */
   .carousel-card-bg {
     position: absolute;
     inset: -12px;
     background-size: cover;
     background-position: center;
-    filter: blur(22px) brightness(0.55) saturate(1.4);
+    filter: blur(18px) brightness(0.55) saturate(1.3);
     transform: scale(1.08);
+    display: none; /* hidden by default */
   }
+  .carousel-card.state-active .carousel-card-bg { display: block; }
   /* main image - shown fully, no crop */
   .carousel-card-img {
     position: absolute;
@@ -2319,14 +2333,25 @@ function onInteract(x,y,fromBtn){
   for(let i=0;i<6;i++) setTimeout(()=>spawnSparkle(x,y),i*55);
 }
 
+function isSuppressedTarget(el) {
+  return el && (
+    el.closest('#theme-toggle') ||
+    el.closest('#music-btn') ||
+    el.closest('.tap-confetti-btn') ||
+    el.closest('.carousel-viewport') ||
+    el.closest('#img-lightbox') ||
+    el.closest('#countdown-overlay') ||
+    el.closest('#cuteness-overlay')
+  );
+}
 document.addEventListener('touchstart',e=>{
   for(const t of e.touches){
     const el=document.elementFromPoint(t.clientX,t.clientY);
-    onInteract(t.clientX,t.clientY, el && (el.closest('#theme-toggle') || el.closest('#music-btn') || el.closest('.tap-confetti-btn')));
+    onInteract(t.clientX,t.clientY, isSuppressedTarget(el));
   }
 },{passive:true});
 document.addEventListener('click',e=>{
-  onInteract(e.clientX,e.clientY, e.target.closest('#theme-toggle') || e.target.closest('#music-btn') || e.target.closest('.tap-confetti-btn'));
+  onInteract(e.clientX,e.clientY, isSuppressedTarget(e.target));
 });
 
 /* ══════════════════════════
@@ -2631,18 +2656,33 @@ document.addEventListener('keydown', e=>{
       goTo(i, i > cur ? 'next' : 'prev'); startAuto();
     }));
 
-    /* swipe */
-    let tx0 = 0, ty0 = 0;
+    /* swipe — only intercept horizontal swipes, let vertical scroll through */
+    let tx0 = 0, ty0 = 0, touchMoved = false;
     viewport.addEventListener('touchstart', e => {
-      tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; pauseAuto();
+      tx0 = e.touches[0].clientX;
+      ty0 = e.touches[0].clientY;
+      touchMoved = false;
+      pauseAuto();
     }, { passive: true });
+    viewport.addEventListener('touchmove', e => {
+      touchMoved = true;
+      const dx = Math.abs(e.touches[0].clientX - tx0);
+      const dy = Math.abs(e.touches[0].clientY - ty0);
+      // only block scroll if clearly horizontal swipe
+      if (dx > dy && dx > 8) e.preventDefault();
+    }, { passive: false });
     viewport.addEventListener('touchend', e => {
       const dx = e.changedTouches[0].clientX - tx0;
       const dy = e.changedTouches[0].clientY - ty0;
-      if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy))
+      if (touchMoved && Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy))
         advance(dx < 0 ? 'next' : 'prev');
       startAuto();
     }, { passive: true });
+
+    /* pause when tab is hidden */
+    document.addEventListener('visibilitychange', () => {
+      document.hidden ? pauseAuto() : startAuto();
+    });
 
     /* mouse drag — track distance to distinguish click vs drag */
     let mx0 = 0, dragging = false, didDrag = false;
