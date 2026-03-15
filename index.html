@@ -1336,7 +1336,7 @@
 <!-- ══════════════════════════════
      COUNTDOWN OVERLAY
 ══════════════════════════════ -->
-<script>var SKIP_TO_REVEAL = true;</script> <!-- set false when giving to sister -->
+<script>var SKIP_TO_REVEAL = false;</script> <!-- set true to skip countdown while testing -->
 <div id="countdown-overlay">
   <!-- floating petals -->
   <div class="cd-petals" id="cd-petals"></div>
@@ -1379,6 +1379,10 @@
       <div class="cd-pin-dot" id="dot-1"></div>
       <div class="cd-pin-dot" id="dot-2"></div>
       <div class="cd-pin-dot" id="dot-3"></div>
+      <div class="cd-pin-dot" id="dot-4"></div>
+      <div class="cd-pin-dot" id="dot-5"></div>
+      <div class="cd-pin-dot" id="dot-6"></div>
+      <div class="cd-pin-dot" id="dot-7"></div>
     </div>
   </div>
 
@@ -2204,7 +2208,7 @@ function startCutenessMeter() {
 <script>
 (function () {
   const UNLOCK_DATE = new Date(2026, 3, 7, 23, 55, 0); // April 7 2026 23:55:00 local time
-  const SECRET_PIN  = '2241';
+  const SECRET_PIN  = '22411871';
 
   const overlay  = document.getElementById('countdown-overlay');
   if (SKIP_TO_REVEAL) return;
@@ -2286,11 +2290,11 @@ function startCutenessMeter() {
   document.head.appendChild(shakeStyle);
 
   function pressDigit(d) {
-    if (pinBuffer.length >= 4) return;
+    if (pinBuffer.length >= 8) return;
     pinBuffer += d;
     updateDots();
 
-    if (pinBuffer.length === 4) {
+    if (pinBuffer.length === 8) {
       if (pinBuffer === SECRET_PIN) {
         unlockSite();
       } else {
