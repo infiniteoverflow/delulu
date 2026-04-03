@@ -160,7 +160,7 @@
   button, a, [role="button"],
   .carousel-card, .carousel-btn, .carousel-dot, .pw-polaroid,
   .cd-key, .lets-check-btn, .tap-confetti-btn,
-  #theme-toggle, #music-btn, #img-lightbox-close {
+  #theme-toggle, #scroll-top-btn, #img-lightbox-close {
     touch-action: manipulation;
   }
 
@@ -632,9 +632,9 @@
   }
 
   /* ══════════════════════════════
-     MUSIC FAB
+     SCROLL TO TOP FAB
   ══════════════════════════════ */
-  #music-btn {
+  #scroll-top-btn {
     position: fixed;
     bottom: 1.4rem;
     right: 1.1rem;
@@ -652,92 +652,11 @@
     justify-content: center;
     -webkit-tap-highlight-color: transparent;
     transition: border-color 0.4s, box-shadow 0.4s, transform 0.2s;
-    overflow: visible;
+    font-size: 1.4rem;
+    line-height: 1;
   }
-  #music-btn:active { transform: scale(0.88); }
-
-  #music-btn::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 1.5px solid var(--rose-light);
-    opacity: 0;
-    transform: scale(1);
-    pointer-events: none;
-  }
-  #music-btn.playing::before {
-    opacity: 0.55;
-    animation: musicPulse 1.8s ease-in-out infinite;
-  }
-  @keyframes musicPulse {
-    0%,100% { transform: scale(1);    opacity: 0.5; }
-    50%      { transform: scale(1.25); opacity: 0.12; }
-  }
-
-  .music-bars {
-    display: flex;
-    align-items: flex-end;
-    gap: 2.5px;
-    height: 20px;
-    transition: opacity 0.3s;
-  }
-  .bar {
-    width: 3px;
-    border-radius: 2px;
-    background: var(--rose);
-    transform-origin: bottom;
-    transition: background 0.4s;
-  }
-  .bar1 { height: 8px;  animation: barDance 1s  0.00s ease-in-out infinite; }
-  .bar2 { height: 14px; animation: barDance 1s  0.15s ease-in-out infinite; }
-  .bar3 { height: 20px; animation: barDance 1s  0.30s ease-in-out infinite; }
-  .bar4 { height: 14px; animation: barDance 1s  0.15s ease-in-out infinite; }
-  .bar5 { height: 8px;  animation: barDance 1s  0.00s ease-in-out infinite; }
-
-  @keyframes barDance {
-    0%,100% { transform: scaleY(0.3); }
-    50%      { transform: scaleY(1); }
-  }
-
-  #music-btn.muted .bar            { animation-play-state: paused; transform: scaleY(0.3); }
-  #music-btn.muted .music-bars     { opacity: 0.35; }
-  #music-btn.muted .mute-slash     { opacity: 1; }
-
-  .mute-slash {
-    position: absolute;
-    width: 2px;
-    height: 30px;
-    background: var(--rose);
-    border-radius: 2px;
-    transform: rotate(40deg);
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    pointer-events: none;
-  }
-
-  #music-toast {
-    position: fixed;
-    bottom: 5.2rem;
-    right: 1rem;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    backdrop-filter: blur(12px);
-    color: var(--text-soft);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.05em;
-    padding: 0.45rem 0.9rem;
-    border-radius: 20px;
-    box-shadow: 0 4px 16px var(--card-shadow);
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.4s ease, transform 0.4s ease, background 0.5s, color 0.5s, border-color 0.5s;
-    pointer-events: none;
-    z-index: 9999;
-  }
-  #music-toast.show { opacity: 1; transform: translateY(0); }
+  #scroll-top-btn:active { transform: scale(0.88); }
+  #scroll-top-btn:hover  { box-shadow: 0 0 18px rgba(192,68,106,0.45); }
 
   /* ══════════════════════════════
      SPARKLES & RIPPLES
@@ -1605,6 +1524,85 @@
   }
   #img-lightbox-close:hover { background: rgba(192,68,106,0.5); transform: scale(1.1); }
 
+  /* ══════════════════════════════
+     CUTENESS RESULT CARD
+  ══════════════════════════════ */
+  .cm-result-card {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    width: min(340px, 90vw);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 28px;
+    padding: 2rem 1.8rem 1.8rem;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 8px 40px var(--card-shadow), inset 0 1px 0 rgba(255,255,255,0.12);
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.88) translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+    overflow: hidden;
+  }
+  .cm-result-card.show {
+    display: flex;
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  .cm-result-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(192,68,106,0.06) 0%, rgba(212,164,80,0.06) 100%);
+    pointer-events: none;
+  }
+
+  .cm-result-ribbon {
+    font-size: 2.4rem;
+    animation: breathe 3s ease-in-out infinite;
+  }
+  .cm-result-title {
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+    line-height: 1.2;
+    background: linear-gradient(140deg, var(--name-from), var(--name-mid), var(--name-to), var(--name-from));
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+  }
+  .cm-result-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.75rem, 3vw, 0.88rem);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    transition: color 0.5s;
+  }
+  .cm-result-body {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.95rem, 4vw, 1.05rem);
+    line-height: 1.8;
+    font-weight: 300;
+    color: var(--text-soft);
+    font-style: italic;
+    transition: color 0.5s;
+  }
+  .cm-result-badge {
+    margin-top: 0.4rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    padding: 0.3rem 1rem;
+    transition: color 0.5s, border-color 0.5s;
+  }
+
 </style>
 </head>
 <body>
@@ -1633,20 +1631,8 @@
   <span class="toggle-icon icon-moon">🌙</span>
 </button>
 
-<!-- Music toast hint -->
-<div id="music-toast">🎵 Scroll to play music</div>
-
-<!-- Music FAB -->
-<button id="music-btn" class="muted" aria-label="Toggle music">
-  <div class="music-bars">
-    <div class="bar bar1"></div>
-    <div class="bar bar2"></div>
-    <div class="bar bar3"></div>
-    <div class="bar bar4"></div>
-    <div class="bar bar5"></div>
-  </div>
-  <div class="mute-slash"></div>
-</button>
+<!-- Scroll to top FAB -->
+<button id="scroll-top-btn" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">🌸</button>
 
 <canvas id="petal-canvas"></canvas>
 <div class="orb orb1"></div>
@@ -1714,12 +1700,12 @@
 
 <!-- ═══ MEMORY ═══ -->
 <section class="page" id="memory">
-  <div class="memory-quote" data-reveal data-typewriter='"Growing up with you was my favourite story"'></div>
+  <div class="memory-quote" data-reveal data-typewriter='"Texting you everyday is my favorite part of the day"'></div>
   <div class="memory-divider" data-reveal>
     <div class="md-line"></div><div class="md-icon">🌸</div><div class="md-line"></div>
   </div>
   <p class="memory-body" data-reveal>
-    Through every silly moment, every argument we forgot by dinner, every late-night laugh that made our stomachs hurt — you made growing up feel like an adventure. And I wouldn't trade a single chapter of it.
+    You may not know but one message from you can turn my whole day around. Your words have this incredible power to lift me up, make me laugh, and remind me that I'm never alone. I cherish every single text, every emoji, every little conversation we share — they are like tiny treasures that brighten my life in ways I can't even fully express.
   </p>
 </section>
 
@@ -1732,8 +1718,7 @@
 
   <div class="shake-hint" data-reveal>
     <div class="shake-phone-icon">📱</div>
-    <p class="shake-text">Shake your phone to see some magic</p>
-    <button class="tap-confetti-btn" onclick="launchConfetti()">or just tap here ✨</button>
+    <button class="tap-confetti-btn" onclick="launchConfetti()">Tap here for some magic ✨</button>
   </div>
 </section>
 
@@ -1767,11 +1752,25 @@
     </div>
   </div>
 
+  <!-- Cuteness result card (appears after meter completes) -->
+  <div class="cm-result-card" id="cm-result-card">
+    <div class="cm-result-ribbon">🎀</div>
+    <p class="cm-result-title">Officially Too Cute</p>
+    <p class="cm-result-subtitle">Official Certification</p>
+    <p class="cm-result-body">
+      This certifies that <em style="-webkit-text-fill-color:var(--rose-light);font-style:normal">Shuttumani</em>
+      has broken every known scale of cuteness, scoring a record
+      <strong style="color:var(--gold);font-weight:600">150%</strong>
+      and causing widespread heart-melting across the universe.
+    </p>
+    <div class="cm-result-badge">✦ Issued with Love ✦</div>
+  </div>
+
 </section>
 
 <!-- ═══ MEMORIES — POLAROID SCATTER WALL ═══ -->
 <section class="page" id="memories-section">
-  <p class="pw-section-title">our little world 🌸</p>
+  <p class="pw-section-title">Us over the years 🌸</p>
   <div class="pw-wall" id="polaroid-wall" aria-label="Photo memories"></div>
 </section>
 
@@ -1912,127 +1911,12 @@ function tick(){
 }
 tick();
 
-/* ══════════════════════════
-   BIRTHDAY MUSIC ENGINE
-══════════════════════════ */
-const AC = window.AudioContext || window.webkitAudioContext;
-let audioCtx   = null;
-let masterGain = null;
-let isMuted    = true;
-let musicStarted = false;
-let nextLoopTimeout = null;
-
-// Happy Birthday melody: [frequency_hz, duration_in_beats]
-const BEAT = 0.30; // seconds per beat
-const GAP  = 0.8;  // silent beats between loops
-const melody = [
-  [392,0.75],[392,0.25],[440,1],[392,1],[523,1],[494,2.5],
-  [392,0.75],[392,0.25],[440,1],[392,1],[587,1],[523,2.5],
-  [392,0.75],[392,0.25],[784,1],[659,1],[523,1],[494,1],[440,2.5],
-  [698,0.75],[698,0.25],[659,1],[523,1],[587,1],[523,3],
-];
-const MELODY_DURATION = melody.reduce((s,[,d])=>s+d,0)*BEAT + GAP*BEAT;
-
-function initAudio(){
-  if(audioCtx) return;
-  audioCtx   = new AC();
-  masterGain = audioCtx.createGain();
-  masterGain.gain.value = 0;   // start silent; fade in
-  masterGain.connect(audioCtx.destination);
-}
-
-function playNote(freq, startTime, beats){
-  const dur = beats * BEAT;
-
-  // Layered sine waves for a soft bell/music-box timbre
-  [[1,0.55],[2,0.22],[3,0.10],[4,0.05]].forEach(([mult, amp])=>{
-    const osc  = audioCtx.createOscillator();
-    const gn   = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = freq * mult;
-    osc.connect(gn);
-    gn.connect(masterGain);
-    // Envelope: quick attack, exponential decay
-    gn.gain.setValueAtTime(0, startTime);
-    gn.gain.linearRampToValueAtTime(amp, startTime + 0.018);
-    gn.gain.exponentialRampToValueAtTime(0.001, startTime + Math.min(dur * 0.9, 1.4));
-    osc.start(startTime);
-    osc.stop(startTime + Math.min(dur, 1.5));
-  });
-}
-
-function scheduleMelody(){
-  if(!audioCtx || isMuted) return;
-  let t = audioCtx.currentTime + 0.05;
-  melody.forEach(([freq, beats])=>{ playNote(freq, t, beats); t += beats*BEAT; });
-  nextLoopTimeout = setTimeout(scheduleMelody, MELODY_DURATION * 1000);
-}
-
-function fadeGain(to, ms){
-  if(!masterGain) return;
-  masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-  masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-  masterGain.gain.linearRampToValueAtTime(to, audioCtx.currentTime + ms/1000);
-}
-
-function startMusic(){
-  if(musicStarted) return;
-  musicStarted = true;
-  initAudio();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  isMuted = false;
-  musicBtn.classList.remove('muted');
-  musicBtn.classList.add('playing');
-  masterGain.gain.value = 0;
-  fadeGain(0.42, 1200);
-  scheduleMelody();
-}
-
-const musicBtn = document.getElementById('music-btn');
-const toast    = document.getElementById('music-toast');
-
-// Show toast hint after 1.5s
-setTimeout(()=>{
-  toast.classList.add('show');
-  setTimeout(()=> toast.classList.remove('show'), 3200);
-}, 1500);
-
-// Start on first scroll
-let scrollUnlocked = false;
-window.addEventListener('scroll', ()=>{
-  if(scrollUnlocked) return;
-  scrollUnlocked = true;
-  startMusic();
-}, { passive: true, once: true });
-
-// FAB toggle
-musicBtn.addEventListener('click', ()=>{
-  if(!musicStarted){
-    // Manual start before scroll
-    startMusic();
-    return;
-  }
-  isMuted = !isMuted;
-  if(isMuted){
-    fadeGain(0, 600);
-    musicBtn.classList.add('muted');
-    musicBtn.classList.remove('playing');
-    clearTimeout(nextLoopTimeout);
-    nextLoopTimeout = null;
-  } else {
-    musicBtn.classList.remove('muted');
-    musicBtn.classList.add('playing');
-    fadeGain(0.42, 600);
-    clearTimeout(nextLoopTimeout);
-    nextLoopTimeout = null;
-    scheduleMelody(); // always restart from the top
-  }
-});
+/* (music removed) */
 
 /* ══════════════════════════
    SCROLL REVEAL + TYPEWRITER
 ══════════════════════════ */
-const TYPEWRITER_TEXT = '"Growing up with you was my favourite story"';
+const TYPEWRITER_TEXT = '"Texting you everyday is my favorite part of the day"';
 let twDone = false;
 
 function runTypewriter(el){
@@ -2215,7 +2099,7 @@ function onInteract(x,y,fromBtn){
 function isSuppressedTarget(el) {
   return el && (
     el.closest('#theme-toggle') ||
-    el.closest('#music-btn') ||
+    el.closest('#scroll-top-btn') ||
     el.closest('.tap-confetti-btn') ||
     el.closest('.carousel-viewport') ||
     el.closest('.pw-wall') ||
@@ -2759,10 +2643,11 @@ document.addEventListener('keydown', e=>{
 <!-- ══ CUTENESS METER SCRIPT ══ -->
 <script>
 function startCutenessMeter() {
-  const overlay  = document.getElementById('cuteness-overlay');
-  const bar      = document.getElementById('cm-bar');
-  const pctEl    = document.getElementById('cm-percent');
-  const warning  = document.getElementById('cm-warning');
+  const overlay    = document.getElementById('cuteness-overlay');
+  const bar        = document.getElementById('cm-bar');
+  const pctEl      = document.getElementById('cm-percent');
+  const warning    = document.getElementById('cm-warning');
+  const resultCard = document.getElementById('cm-result-card');
 
   // reset state
   bar.style.width = '0%';
@@ -2770,6 +2655,8 @@ function startCutenessMeter() {
   pctEl.classList.remove('overflow');
   pctEl.innerHTML = '0<span>%</span>';
   warning.classList.remove('show');
+  resultCard.classList.remove('show');
+  resultCard.style.display = 'none';
 
   overlay.style.opacity = '0';
   overlay.classList.add('active');
@@ -2810,7 +2697,7 @@ function startCutenessMeter() {
     if (progress < 1) {
       requestAnimationFrame(step);
     } else {
-      // maxed out — show warning + shake
+      // maxed out — show warning + shake + result card
       done = true;
       bar.style.width = '100%';
       pctEl.innerHTML = '150<span>%</span>';
@@ -2828,6 +2715,17 @@ function startCutenessMeter() {
           warning.classList.remove('show');
         }, 5000);
       }, 150);
+
+      // Show result card after warning appears
+      setTimeout(() => {
+        resultCard.style.display = 'flex';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            resultCard.classList.add('show');
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        });
+      }, 900);
     }
   }
 
