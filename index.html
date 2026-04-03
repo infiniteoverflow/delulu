@@ -1423,22 +1423,20 @@
      CUTENESS METER OVERLAY
   ══════════════════════════════ */
   #cuteness-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 99998;
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 2.2rem;
     padding: 2.5rem 1.8rem;
-    background: var(--bg);
+    width: 100%;
+    max-width: 500px;
     opacity: 0;
-    pointer-events: none;
     transition: opacity 0.5s ease;
-    overflow: hidden;
   }
-  #cuteness-overlay.active { opacity: 1; pointer-events: auto; }
+  #cuteness-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
 
   .cm-title {
     font-family: 'Pinyon Script', cursive;
@@ -1621,18 +1619,6 @@
   <img id="img-lightbox-img" src="" alt="Full preview" />
 </div>
 
-<!-- ═══ CUTENESS METER OVERLAY ═══ -->
-<div id="cuteness-overlay">
-  <p class="cm-title">Measuring your cuteness…<br>keep smiling 🌸</p>
-  <div class="cm-emoji-row">🌷 ✨ 🎀 ✨ 🌷</div>
-  <div class="cm-percent" id="cm-percent">0<span>%</span></div>
-  <div class="cm-track-wrap">
-    <div class="cm-track">
-      <div class="cm-bar" id="cm-bar"></div>
-    </div>
-    <div class="cm-labels"><span>0%</span><span>50%</span><span>100%</span><span>150%</span></div>
-  </div>
-</div>
 <div class="cm-warning" id="cm-warning">⚠️ TOO CUTE TO HANDLE ⚠️</div>
 
 <!-- Scroll progress bar -->
@@ -1767,6 +1753,19 @@
   <button class="lets-check-btn" data-reveal onclick="startCutenessMeter()">
     Let's check ✨🎀
   </button>
+
+  <!-- Cuteness meter (inline, appears below the button) -->
+  <div id="cuteness-overlay">
+    <p class="cm-title">Measuring your cuteness…<br>keep smiling 🌸</p>
+    <div class="cm-emoji-row">🌷 ✨ 🎀 ✨ 🌷</div>
+    <div class="cm-percent" id="cm-percent">0<span>%</span></div>
+    <div class="cm-track-wrap">
+      <div class="cm-track">
+        <div class="cm-bar" id="cm-bar"></div>
+      </div>
+      <div class="cm-labels"><span>0%</span><span>50%</span><span>100%</span><span>150%</span></div>
+    </div>
+  </div>
 
 </section>
 
@@ -2772,7 +2771,16 @@ function startCutenessMeter() {
   pctEl.innerHTML = '0<span>%</span>';
   warning.classList.remove('show');
 
+  overlay.style.opacity = '0';
   overlay.classList.add('active');
+
+  // Fade in then scroll to it
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '1';
+      overlay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 
   const TARGET   = 150;
   const DURATION = 3800; // ms to reach 150%
@@ -2815,6 +2823,10 @@ function startCutenessMeter() {
         document.body.addEventListener('animationend', () => {
           document.body.classList.remove('shaking');
         }, { once: true });
+
+        setTimeout(() => {
+          warning.classList.remove('show');
+        }, 5000);
       }, 150);
     }
   }
