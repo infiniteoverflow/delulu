@@ -12,7 +12,7 @@
     document.getElementById('html-root').dataset.theme = (hour >= 0 && hour < 7) ? 'dark' : 'light';
   })();
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Pinyon+Script&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Pinyon+Script&display=swap" rel="stylesheet" />
 <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.3/dist/dotlottie-wc.js" type="module"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -158,9 +158,9 @@
   ══════════════════════════════ */
   /* Prevent double-tap zoom on every interactive element */
   button, a, [role="button"],
-  .carousel-card, .carousel-btn, .carousel-dot,
+  .carousel-card, .carousel-btn, .carousel-dot, .pw-polaroid,
   .cd-key, .lets-check-btn, .tap-confetti-btn,
-  #theme-toggle, #music-btn, #img-lightbox-close {
+  #theme-toggle, #scroll-top-btn, #img-lightbox-close {
     touch-action: manipulation;
   }
 
@@ -632,9 +632,9 @@
   }
 
   /* ══════════════════════════════
-     MUSIC FAB
+     SCROLL TO TOP FAB
   ══════════════════════════════ */
-  #music-btn {
+  #scroll-top-btn {
     position: fixed;
     bottom: 1.4rem;
     right: 1.1rem;
@@ -652,92 +652,11 @@
     justify-content: center;
     -webkit-tap-highlight-color: transparent;
     transition: border-color 0.4s, box-shadow 0.4s, transform 0.2s;
-    overflow: visible;
+    font-size: 1.4rem;
+    line-height: 1;
   }
-  #music-btn:active { transform: scale(0.88); }
-
-  #music-btn::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 1.5px solid var(--rose-light);
-    opacity: 0;
-    transform: scale(1);
-    pointer-events: none;
-  }
-  #music-btn.playing::before {
-    opacity: 0.55;
-    animation: musicPulse 1.8s ease-in-out infinite;
-  }
-  @keyframes musicPulse {
-    0%,100% { transform: scale(1);    opacity: 0.5; }
-    50%      { transform: scale(1.25); opacity: 0.12; }
-  }
-
-  .music-bars {
-    display: flex;
-    align-items: flex-end;
-    gap: 2.5px;
-    height: 20px;
-    transition: opacity 0.3s;
-  }
-  .bar {
-    width: 3px;
-    border-radius: 2px;
-    background: var(--rose);
-    transform-origin: bottom;
-    transition: background 0.4s;
-  }
-  .bar1 { height: 8px;  animation: barDance 1s  0.00s ease-in-out infinite; }
-  .bar2 { height: 14px; animation: barDance 1s  0.15s ease-in-out infinite; }
-  .bar3 { height: 20px; animation: barDance 1s  0.30s ease-in-out infinite; }
-  .bar4 { height: 14px; animation: barDance 1s  0.15s ease-in-out infinite; }
-  .bar5 { height: 8px;  animation: barDance 1s  0.00s ease-in-out infinite; }
-
-  @keyframes barDance {
-    0%,100% { transform: scaleY(0.3); }
-    50%      { transform: scaleY(1); }
-  }
-
-  #music-btn.muted .bar            { animation-play-state: paused; transform: scaleY(0.3); }
-  #music-btn.muted .music-bars     { opacity: 0.35; }
-  #music-btn.muted .mute-slash     { opacity: 1; }
-
-  .mute-slash {
-    position: absolute;
-    width: 2px;
-    height: 30px;
-    background: var(--rose);
-    border-radius: 2px;
-    transform: rotate(40deg);
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    pointer-events: none;
-  }
-
-  #music-toast {
-    position: fixed;
-    bottom: 5.2rem;
-    right: 1rem;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    backdrop-filter: blur(12px);
-    color: var(--text-soft);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.05em;
-    padding: 0.45rem 0.9rem;
-    border-radius: 20px;
-    box-shadow: 0 4px 16px var(--card-shadow);
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.4s ease, transform 0.4s ease, background 0.5s, color 0.5s, border-color 0.5s;
-    pointer-events: none;
-    z-index: 9999;
-  }
-  #music-toast.show { opacity: 1; transform: translateY(0); }
+  #scroll-top-btn:active { transform: scale(0.88); }
+  #scroll-top-btn:hover  { box-shadow: 0 0 18px rgba(192,68,106,0.45); }
 
   /* ══════════════════════════════
      SPARKLES & RIPPLES
@@ -1104,6 +1023,248 @@
   }
 
   /* ══════════════════════════════
+     POLAROID SCATTER WALL
+  ══════════════════════════════ */
+
+  .pw-section-title {
+    font-family: 'Pinyon Script', cursive;
+    font-size: clamp(2.4rem, 11vw, 4rem);
+    line-height: 1.1;
+    background: linear-gradient(140deg, var(--name-from), var(--name-mid), var(--name-to), var(--name-from));
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+    text-align: center;
+    margin-bottom: 2.4rem;
+  }
+
+  .pw-wall {
+    width: 100%;
+    max-width: 860px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.4rem 1.8rem;
+    padding: 2.4rem;
+    border-radius: 18px;
+    background-color: #c8a96e;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(120,70,20,0.06) 2px, rgba(120,70,20,0.06) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(100,60,15,0.05) 3px, rgba(100,60,15,0.05) 5px),
+      radial-gradient(ellipse at 20% 30%, rgba(180,120,50,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 70%, rgba(140,90,30,0.2) 0%, transparent 55%);
+    box-shadow:
+      inset 0 2px 8px rgba(80,40,0,0.18),
+      0 8px 40px rgba(0,0,0,0.22),
+      0 2px 8px rgba(0,0,0,0.12);
+  }
+
+  [data-theme="dark"] .pw-wall {
+    background-color: #6b4d2a;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(40,20,5,0.12) 2px, rgba(40,20,5,0.12) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(30,15,5,0.1) 3px, rgba(30,15,5,0.1) 5px),
+      radial-gradient(ellipse at 20% 30%, rgba(90,55,15,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 70%, rgba(60,35,10,0.25) 0%, transparent 55%);
+    box-shadow:
+      inset 0 2px 10px rgba(0,0,0,0.35),
+      0 8px 48px rgba(0,0,0,0.5),
+      0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .pw-polaroid {
+    perspective: 800px;
+    cursor: pointer;
+    will-change: transform;
+  }
+
+  .pw-card-inner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    transform-style: preserve-3d;
+    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 3px;
+  }
+
+  .pw-polaroid.flipped .pw-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .pw-face-front,
+  .pw-face-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  /* ── Front face ── */
+  .pw-face-front {
+    background: #fff;
+    padding: 6px 6px 28px 6px;
+    box-shadow:
+      0 4px 16px rgba(0,0,0,0.28),
+      0 1px 4px rgba(0,0,0,0.16),
+      0 0 0 1px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pw-photo-wrap {
+    flex: 1;
+    overflow: hidden;
+    background: #e8e0d8;
+    position: relative;
+    border-radius: 2px;
+  }
+
+  .pw-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    transition: transform 0.3s ease;
+  }
+
+  .pw-polaroid.loading .pw-photo-wrap {
+    background: linear-gradient(90deg,
+      rgba(192,68,106,0.07) 25%,
+      rgba(192,68,106,0.14) 50%,
+      rgba(192,68,106,0.07) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+
+  /* push-pin dot */
+  .pw-face-front::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e07898, #c0446a 60%, #8a2040);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 -1px 2px rgba(0,0,0,0.2);
+    z-index: 10;
+  }
+
+  /* ── Back face ── */
+  .pw-face-back {
+    background-color: #c8a96e;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 3px,
+      rgba(120,70,20,0.08) 3px, rgba(120,70,20,0.08) 5px
+    );
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem;
+    gap: 0.8rem;
+    box-shadow:
+      0 4px 16px rgba(0,0,0,0.28),
+      0 1px 4px rgba(0,0,0,0.16),
+      0 0 0 1px rgba(0,0,0,0.06);
+  }
+
+  [data-theme="dark"] .pw-face-back {
+    background-color: #5a3d1f;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 3px,
+      rgba(30,15,5,0.14) 3px, rgba(30,15,5,0.14) 5px
+    );
+  }
+
+  /* ruled lines overlay on back */
+  .pw-face-back::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      transparent, transparent 22px,
+      rgba(100,60,20,0.2) 22px, rgba(100,60,20,0.2) 23px
+    );
+    pointer-events: none;
+  }
+
+  .pw-caption {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    font-weight: 400;
+    color: #3a2010;
+    text-align: center;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+  }
+
+  [data-theme="dark"] .pw-caption {
+    color: #f5e8d0;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  .pw-back-thumb {
+    width: 54px;
+    height: 54px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.5);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    cursor: zoom-in;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+  }
+
+  .pw-back-thumb:hover {
+    transform: scale(1.12);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  }
+
+  .pw-back-hint {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(0.68rem, 2.2vw, 0.8rem);
+    color: rgba(80,45,10,0.65);
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.04em;
+  }
+
+  [data-theme="dark"] .pw-back-hint {
+    color: rgba(220,190,140,0.6);
+  }
+
+  @media (max-width: 640px) {
+    .pw-wall {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.8rem 1.2rem;
+      padding: 1.6rem;
+    }
+    .pw-face-front { padding: 4px 4px 22px 4px; }
+  }
+
+  @media (max-width: 380px) {
+    .pw-wall {
+      grid-template-columns: 1fr;
+      max-width: 240px;
+      margin: 0 auto;
+    }
+  }
+
+  /* ══════════════════════════════
      SHUTTUMANI SECTION
   ══════════════════════════════ */
   #shuttumani-section {
@@ -1181,22 +1342,20 @@
      CUTENESS METER OVERLAY
   ══════════════════════════════ */
   #cuteness-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 99998;
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 2.2rem;
     padding: 2.5rem 1.8rem;
-    background: var(--bg);
+    width: 100%;
+    max-width: 500px;
     opacity: 0;
-    pointer-events: none;
     transition: opacity 0.5s ease;
-    overflow: hidden;
   }
-  #cuteness-overlay.active { opacity: 1; pointer-events: auto; }
+  #cuteness-overlay.active {
+    display: flex;
+    opacity: 1;
+  }
 
   .cm-title {
     font-family: 'Pinyon Script', cursive;
@@ -1366,372 +1525,88 @@
   #img-lightbox-close:hover { background: rgba(192,68,106,0.5); transform: scale(1.1); }
 
   /* ══════════════════════════════
-     COUNTDOWN OVERLAY
+     CUTENESS RESULT CARD
   ══════════════════════════════ */
-  #countdown-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
-    display: flex;
+  .cm-result-card {
+    display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    gap: 2.2rem;
-    padding: 3rem 1.5rem 3rem;
-    background: #0a0005;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* soft floating orbs behind overlay */
-  #countdown-overlay::before,
-  #countdown-overlay::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-  }
-  #countdown-overlay::before {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(192,68,106,0.28) 0%, transparent 70%);
-    top: -80px; left: -80px;
-    animation: orbDrift1 9s ease-in-out infinite alternate;
-  }
-  #countdown-overlay::after {
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(176,120,48,0.2) 0%, transparent 70%);
-    bottom: -60px; right: -60px;
-    animation: orbDrift2 11s ease-in-out infinite alternate;
-  }
-  @keyframes orbDrift1 { to { transform: translate(60px, 80px); } }
-  @keyframes orbDrift2 { to { transform: translate(-50px, -60px); } }
-
-  .cd-petals {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+    gap: 0.8rem;
+    width: min(340px, 90vw);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 28px;
+    padding: 2rem 1.8rem 1.8rem;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 8px 40px var(--card-shadow), inset 0 1px 0 rgba(255,255,255,0.12);
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.88) translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
     overflow: hidden;
   }
-  .cd-petal {
+  .cm-result-card.show {
+    display: flex;
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  .cm-result-card::before {
+    content: '';
     position: absolute;
-    font-size: 1.4rem;
-    opacity: 0;
-    animation: petalFall linear infinite;
-  }
-  @keyframes petalFall {
-    0%   { opacity: 0; transform: translateY(-20px) rotate(0deg); }
-    10%  { opacity: 0.55; }
-    90%  { opacity: 0.4; }
-    100% { opacity: 0; transform: translateY(100vh) rotate(380deg); }
+    inset: 0;
+    background: linear-gradient(135deg, rgba(192,68,106,0.06) 0%, rgba(212,164,80,0.06) 100%);
+    pointer-events: none;
   }
 
-  .cd-top-badge {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(0.75rem, 3.5vw, 0.9rem);
-    letter-spacing: 0.22em;
-    color: #e07898;
-    text-transform: uppercase;
-    opacity: 0.75;
-    position: relative;
-    z-index: 1;
+  .cm-result-ribbon {
+    font-size: 2.4rem;
+    animation: breathe 3s ease-in-out infinite;
   }
-
-  .cd-title {
+  .cm-result-title {
     font-family: 'Pinyon Script', cursive;
-    font-size: clamp(2.6rem, 12vw, 4.8rem);
-    line-height: 1.1;
-    background: linear-gradient(140deg, #fde8f0, #e8c07a, #e07898, #fde8f0);
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+    line-height: 1.2;
+    background: linear-gradient(140deg, var(--name-from), var(--name-mid), var(--name-to), var(--name-from));
     background-size: 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: shimmer 5s linear infinite;
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    filter: drop-shadow(0 0 28px rgba(192,68,106,0.4));
   }
-
-  .cd-subtitle {
+  .cm-result-subtitle {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(0.8rem, 3.8vw, 0.95rem);
-    color: #b07898;
-    letter-spacing: 0.1em;
-    font-style: italic;
-    text-align: center;
-    position: relative;
-    z-index: 1;
-    margin-top: -1.2rem;
-  }
-
-  .cd-boxes {
-    display: flex;
-    gap: clamp(0.6rem, 2.5vw, 1.1rem);
-    position: relative;
-    z-index: 1;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .cd-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.35rem;
-    min-width: clamp(62px, 16vw, 86px);
-  }
-
-  .cd-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.4rem, 10vw, 4rem);
-    font-weight: 300;
-    line-height: 1;
-    color: #fde8f0;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(192,68,106,0.22);
-    border-radius: 16px;
-    width: 100%;
-    text-align: center;
-    padding: 0.55rem 0.3rem 0.4rem;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
-    transition: color 0.3s;
-    letter-spacing: -0.02em;
-  }
-
-  .cd-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(0.6rem, 2.8vw, 0.72rem);
-    letter-spacing: 0.18em;
-    color: #b07898;
+    font-size: clamp(0.75rem, 3vw, 0.88rem);
+    letter-spacing: 0.3em;
     text-transform: uppercase;
+    color: var(--gold);
+    transition: color 0.5s;
   }
-
-  .cd-colon {
+  .cm-result-body {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 8vw, 3.2rem);
-    color: rgba(192,68,106,0.5);
-    align-self: flex-start;
-    margin-top: 0.5rem;
-    position: relative;
-    z-index: 1;
-    animation: colonBlink 1s step-end infinite;
-  }
-  @keyframes colonBlink {
-    0%,100% { opacity: 0.5; }
-    50%      { opacity: 0.1; }
-  }
-
-  .cd-divider {
-    width: clamp(160px, 60vw, 260px);
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(192,68,106,0.3), rgba(176,120,48,0.25), rgba(192,68,106,0.3), transparent);
-    position: relative;
-    z-index: 1;
-  }
-
-  /* PIN area */
-  .cd-pin-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .cd-pin-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(0.72rem, 3.2vw, 0.85rem);
-    letter-spacing: 0.18em;
-    color: #b07898;
-    text-transform: uppercase;
-    font-style: italic;
-  }
-
-  .cd-pin-dots {
-    display: flex;
-    gap: 0.7rem;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .cd-pin-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(192,68,106,0.4);
-    background: transparent;
-    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-  }
-  .cd-pin-dot.filled {
-    background: #c0446a;
-    border-color: #e07898;
-    box-shadow: 0 0 8px rgba(192,68,106,0.6);
-  }
-
-  .cd-pin-input {
-    position: absolute;
-    opacity: 0;
-    width: 1px;
-    height: 1px;
-    pointer-events: none;
-  }
-
-  .cd-pin-tap {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(0.68rem, 3vw, 0.8rem);
-    color: #7a3050;
-    font-style: italic;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* keypad */
-  .cd-keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.55rem;
-    width: clamp(200px, 70vw, 260px);
-    position: relative;
-    z-index: 1;
-  }
-
-  .cd-key {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(192,68,106,0.18);
-    border-radius: 12px;
-    color: #fde8f0;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.3rem, 6vw, 1.8rem);
+    font-size: clamp(0.95rem, 4vw, 1.05rem);
+    line-height: 1.8;
     font-weight: 300;
-    padding: 0.75rem 0;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-    -webkit-tap-highlight-color: transparent;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-    user-select: none;
-  }
-  .cd-key:active, .cd-key.pressed {
-    background: rgba(192,68,106,0.18);
-    transform: scale(0.93);
-    box-shadow: 0 0 12px rgba(192,68,106,0.35);
-  }
-  .cd-key.key-del {
-    font-size: clamp(0.9rem, 4vw, 1.1rem);
-    letter-spacing: 0.05em;
-    color: #b07898;
-  }
-  .cd-key.key-zero { grid-column: 2; }
-
-  .cd-pin-error {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(0.72rem, 3.2vw, 0.85rem);
-    color: #e07898;
+    color: var(--text-soft);
     font-style: italic;
-    letter-spacing: 0.06em;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    height: 1.1em;
-    position: relative;
-    z-index: 1;
+    transition: color 0.5s;
   }
-  .cd-pin-error.show { opacity: 1; }
+  .cm-result-badge {
+    margin-top: 0.4rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    padding: 0.3rem 1rem;
+    transition: color 0.5s, border-color 0.5s;
+  }
 
-  /* unlock animation */
-  #countdown-overlay.unlocking {
-    animation: overlayUnlock 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  }
-  @keyframes overlayUnlock {
-    0%   { opacity: 1; transform: scale(1); }
-    60%  { opacity: 1; transform: scale(1.04); }
-    100% { opacity: 0; transform: scale(1.08); pointer-events: none; }
-  }
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════
-     COUNTDOWN OVERLAY
-══════════════════════════════ -->
-<script>var SKIP_TO_REVEAL = false;</script> <!-- set true to skip countdown while testing -->
-<div id="countdown-overlay">
-  <!-- floating petals -->
-  <div class="cd-petals" id="cd-petals"></div>
-
-  <div class="cd-top-badge">something special awaits</div>
-
-  <div class="cd-title">A little surprise…</div>
-  <div class="cd-subtitle">opens on April 7th at 11:55 PM</div>
-
-  <!-- countdown boxes -->
-  <div class="cd-boxes">
-    <div class="cd-box">
-      <div class="cd-num" id="cd-days">00</div>
-      <div class="cd-label">days</div>
-    </div>
-    <div class="cd-colon">:</div>
-    <div class="cd-box">
-      <div class="cd-num" id="cd-hours">00</div>
-      <div class="cd-label">hours</div>
-    </div>
-    <div class="cd-colon">:</div>
-    <div class="cd-box">
-      <div class="cd-num" id="cd-mins">00</div>
-      <div class="cd-label">mins</div>
-    </div>
-    <div class="cd-colon">:</div>
-    <div class="cd-box">
-      <div class="cd-num" id="cd-secs">00</div>
-      <div class="cd-label">secs</div>
-    </div>
-  </div>
-
-  <div class="cd-divider"></div>
-
-  <!-- PIN section -->
-  <div class="cd-pin-area">
-    <div class="cd-pin-label">or enter your secret code</div>
-    <div class="cd-pin-dots" id="cd-pin-dots">
-      <div class="cd-pin-dot" id="dot-0"></div>
-      <div class="cd-pin-dot" id="dot-1"></div>
-      <div class="cd-pin-dot" id="dot-2"></div>
-      <div class="cd-pin-dot" id="dot-3"></div>
-      <div class="cd-pin-dot" id="dot-4"></div>
-      <div class="cd-pin-dot" id="dot-5"></div>
-      <div class="cd-pin-dot" id="dot-6"></div>
-      <div class="cd-pin-dot" id="dot-7"></div>
-    </div>
-  </div>
-
-  <!-- keypad -->
-  <div class="cd-keypad" id="cd-keypad">
-    <button class="cd-key" data-digit="1">1</button>
-    <button class="cd-key" data-digit="2">2</button>
-    <button class="cd-key" data-digit="3">3</button>
-    <button class="cd-key" data-digit="4">4</button>
-    <button class="cd-key" data-digit="5">5</button>
-    <button class="cd-key" data-digit="6">6</button>
-    <button class="cd-key" data-digit="7">7</button>
-    <button class="cd-key" data-digit="8">8</button>
-    <button class="cd-key" data-digit="9">9</button>
-    <button class="cd-key key-zero" data-digit="0">0</button>
-    <button class="cd-key key-del" data-action="del">del</button>
-  </div>
-
-  <div class="cd-pin-error" id="cd-pin-error">hmm, that's not quite right ✦</div>
-
-  <div class="cd-divider"></div>
-
-  <!-- memories carousel (compact) -->
-  <div class="carousel-wrap compact" id="carousel-countdown" data-carousel></div>
-
-</div>
-<script>if (SKIP_TO_REVEAL) document.getElementById('countdown-overlay').style.display = 'none';</script>
 
 <!-- Shake flash -->
 <div id="shake-flash"></div>
@@ -1742,18 +1617,6 @@
   <img id="img-lightbox-img" src="" alt="Full preview" />
 </div>
 
-<!-- ═══ CUTENESS METER OVERLAY ═══ -->
-<div id="cuteness-overlay">
-  <p class="cm-title">Measuring your cuteness…<br>keep smiling 🌸</p>
-  <div class="cm-emoji-row">🌷 ✨ 🎀 ✨ 🌷</div>
-  <div class="cm-percent" id="cm-percent">0<span>%</span></div>
-  <div class="cm-track-wrap">
-    <div class="cm-track">
-      <div class="cm-bar" id="cm-bar"></div>
-    </div>
-    <div class="cm-labels"><span>0%</span><span>50%</span><span>100%</span><span>150%</span></div>
-  </div>
-</div>
 <div class="cm-warning" id="cm-warning">⚠️ TOO CUTE TO HANDLE ⚠️</div>
 
 <!-- Scroll progress bar -->
@@ -1768,20 +1631,8 @@
   <span class="toggle-icon icon-moon">🌙</span>
 </button>
 
-<!-- Music toast hint -->
-<div id="music-toast">🎵 Scroll to play music</div>
-
-<!-- Music FAB -->
-<button id="music-btn" class="muted" aria-label="Toggle music">
-  <div class="music-bars">
-    <div class="bar bar1"></div>
-    <div class="bar bar2"></div>
-    <div class="bar bar3"></div>
-    <div class="bar bar4"></div>
-    <div class="bar bar5"></div>
-  </div>
-  <div class="mute-slash"></div>
-</button>
+<!-- Scroll to top FAB -->
+<button id="scroll-top-btn" aria-label="Scroll to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">🌸</button>
 
 <canvas id="petal-canvas"></canvas>
 <div class="orb orb1"></div>
@@ -1849,12 +1700,12 @@
 
 <!-- ═══ MEMORY ═══ -->
 <section class="page" id="memory">
-  <div class="memory-quote" data-reveal data-typewriter='"Growing up with you was my favourite story"'></div>
+  <div class="memory-quote" data-reveal data-typewriter='"Texting you everyday is my favorite part of the day"'></div>
   <div class="memory-divider" data-reveal>
     <div class="md-line"></div><div class="md-icon">🌸</div><div class="md-line"></div>
   </div>
   <p class="memory-body" data-reveal>
-    Through every silly moment, every argument we forgot by dinner, every late-night laugh that made our stomachs hurt — you made growing up feel like an adventure. And I wouldn't trade a single chapter of it.
+    You may not know but one message from you can turn my whole day around. Your words have this incredible power to lift me up, make me laugh, and remind me that I'm never alone. I cherish every single text, every emoji, every little conversation we share — they are like tiny treasures that brighten my life in ways I can't even fully express.
   </p>
 </section>
 
@@ -1867,8 +1718,7 @@
 
   <div class="shake-hint" data-reveal>
     <div class="shake-phone-icon">📱</div>
-    <p class="shake-text">Shake your phone to see some magic</p>
-    <button class="tap-confetti-btn" onclick="launchConfetti()">or just tap here ✨</button>
+    <button class="tap-confetti-btn" onclick="launchConfetti()">Tap here for some magic ✨</button>
   </div>
 </section>
 
@@ -1889,11 +1739,39 @@
     Let's check ✨🎀
   </button>
 
+  <!-- Cuteness meter (inline, appears below the button) -->
+  <div id="cuteness-overlay">
+    <p class="cm-title">Measuring your cuteness…<br>keep smiling 🌸</p>
+    <div class="cm-emoji-row">🌷 ✨ 🎀 ✨ 🌷</div>
+    <div class="cm-percent" id="cm-percent">0<span>%</span></div>
+    <div class="cm-track-wrap">
+      <div class="cm-track">
+        <div class="cm-bar" id="cm-bar"></div>
+      </div>
+      <div class="cm-labels"><span>0%</span><span>50%</span><span>100%</span><span>150%</span></div>
+    </div>
+  </div>
+
+  <!-- Cuteness result card (appears after meter completes) -->
+  <div class="cm-result-card" id="cm-result-card">
+    <div class="cm-result-ribbon">🎀</div>
+    <p class="cm-result-title">Officially Too Cute</p>
+    <p class="cm-result-subtitle">Official Certification</p>
+    <p class="cm-result-body">
+      This certifies that <em style="-webkit-text-fill-color:var(--rose-light);font-style:normal">Shuttumani</em>
+      has broken every known scale of cuteness, scoring a record
+      <strong style="color:var(--gold);font-weight:600">150%</strong>
+      and causing widespread heart-melting across the universe.
+    </p>
+    <div class="cm-result-badge">✦ Issued with Love ✦</div>
+  </div>
+
 </section>
 
-<!-- ═══ MEMORIES CAROUSEL ═══ -->
+<!-- ═══ MEMORIES — POLAROID SCATTER WALL ═══ -->
 <section class="page" id="memories-section">
-  <div class="carousel-wrap" id="carousel-main" data-carousel></div>
+  <p class="pw-section-title">Us over the years 🌸</p>
+  <div class="pw-wall" id="polaroid-wall" aria-label="Photo memories"></div>
 </section>
 
 <script>
@@ -2033,127 +1911,12 @@ function tick(){
 }
 tick();
 
-/* ══════════════════════════
-   BIRTHDAY MUSIC ENGINE
-══════════════════════════ */
-const AC = window.AudioContext || window.webkitAudioContext;
-let audioCtx   = null;
-let masterGain = null;
-let isMuted    = true;
-let musicStarted = false;
-let nextLoopTimeout = null;
-
-// Happy Birthday melody: [frequency_hz, duration_in_beats]
-const BEAT = 0.30; // seconds per beat
-const GAP  = 0.8;  // silent beats between loops
-const melody = [
-  [392,0.75],[392,0.25],[440,1],[392,1],[523,1],[494,2.5],
-  [392,0.75],[392,0.25],[440,1],[392,1],[587,1],[523,2.5],
-  [392,0.75],[392,0.25],[784,1],[659,1],[523,1],[494,1],[440,2.5],
-  [698,0.75],[698,0.25],[659,1],[523,1],[587,1],[523,3],
-];
-const MELODY_DURATION = melody.reduce((s,[,d])=>s+d,0)*BEAT + GAP*BEAT;
-
-function initAudio(){
-  if(audioCtx) return;
-  audioCtx   = new AC();
-  masterGain = audioCtx.createGain();
-  masterGain.gain.value = 0;   // start silent; fade in
-  masterGain.connect(audioCtx.destination);
-}
-
-function playNote(freq, startTime, beats){
-  const dur = beats * BEAT;
-
-  // Layered sine waves for a soft bell/music-box timbre
-  [[1,0.55],[2,0.22],[3,0.10],[4,0.05]].forEach(([mult, amp])=>{
-    const osc  = audioCtx.createOscillator();
-    const gn   = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = freq * mult;
-    osc.connect(gn);
-    gn.connect(masterGain);
-    // Envelope: quick attack, exponential decay
-    gn.gain.setValueAtTime(0, startTime);
-    gn.gain.linearRampToValueAtTime(amp, startTime + 0.018);
-    gn.gain.exponentialRampToValueAtTime(0.001, startTime + Math.min(dur * 0.9, 1.4));
-    osc.start(startTime);
-    osc.stop(startTime + Math.min(dur, 1.5));
-  });
-}
-
-function scheduleMelody(){
-  if(!audioCtx || isMuted) return;
-  let t = audioCtx.currentTime + 0.05;
-  melody.forEach(([freq, beats])=>{ playNote(freq, t, beats); t += beats*BEAT; });
-  nextLoopTimeout = setTimeout(scheduleMelody, MELODY_DURATION * 1000);
-}
-
-function fadeGain(to, ms){
-  if(!masterGain) return;
-  masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-  masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-  masterGain.gain.linearRampToValueAtTime(to, audioCtx.currentTime + ms/1000);
-}
-
-function startMusic(){
-  if(musicStarted) return;
-  musicStarted = true;
-  initAudio();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  isMuted = false;
-  musicBtn.classList.remove('muted');
-  musicBtn.classList.add('playing');
-  masterGain.gain.value = 0;
-  fadeGain(0.42, 1200);
-  scheduleMelody();
-}
-
-const musicBtn = document.getElementById('music-btn');
-const toast    = document.getElementById('music-toast');
-
-// Show toast hint after 1.5s
-setTimeout(()=>{
-  toast.classList.add('show');
-  setTimeout(()=> toast.classList.remove('show'), 3200);
-}, 1500);
-
-// Start on first scroll
-let scrollUnlocked = false;
-window.addEventListener('scroll', ()=>{
-  if(scrollUnlocked) return;
-  scrollUnlocked = true;
-  startMusic();
-}, { passive: true, once: true });
-
-// FAB toggle
-musicBtn.addEventListener('click', ()=>{
-  if(!musicStarted){
-    // Manual start before scroll
-    startMusic();
-    return;
-  }
-  isMuted = !isMuted;
-  if(isMuted){
-    fadeGain(0, 600);
-    musicBtn.classList.add('muted');
-    musicBtn.classList.remove('playing');
-    clearTimeout(nextLoopTimeout);
-    nextLoopTimeout = null;
-  } else {
-    musicBtn.classList.remove('muted');
-    musicBtn.classList.add('playing');
-    fadeGain(0.42, 600);
-    clearTimeout(nextLoopTimeout);
-    nextLoopTimeout = null;
-    scheduleMelody(); // always restart from the top
-  }
-});
+/* (music removed) */
 
 /* ══════════════════════════
    SCROLL REVEAL + TYPEWRITER
 ══════════════════════════ */
-const TYPEWRITER_TEXT = '"Growing up with you was my favourite story"';
+const TYPEWRITER_TEXT = '"Texting you everyday is my favorite part of the day"';
 let twDone = false;
 
 function runTypewriter(el){
@@ -2336,11 +2099,11 @@ function onInteract(x,y,fromBtn){
 function isSuppressedTarget(el) {
   return el && (
     el.closest('#theme-toggle') ||
-    el.closest('#music-btn') ||
+    el.closest('#scroll-top-btn') ||
     el.closest('.tap-confetti-btn') ||
     el.closest('.carousel-viewport') ||
+    el.closest('.pw-wall') ||
     el.closest('#img-lightbox') ||
-    el.closest('#countdown-overlay') ||
     el.closest('#cuteness-overlay')
   );
 }
@@ -2735,13 +2498,156 @@ document.addEventListener('keydown', e=>{
 })();
 </script>
 
+<!-- ══ POLAROID SCATTER WALL SCRIPT ══ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Editable captions — one per image, matching manifest.json order ── */
+  const CAPTIONS = [
+    'every pic with you is my favourite 🌸',
+    'you and your chaotic energy 💫',
+    'this one lives rent-free in my head',
+    'look at you, absolutely glowing ✨',
+    'my fav human, always 🌹',
+    'us vs the world 🤍',
+  ];
+
+  /* Deterministic rotations so layout is the same on every load */
+  const ROTATIONS = [-9, 5, -3, 11, -7, 4];
+  const TILT_MAX  = 14; /* max perspective tilt degrees on hover */
+
+  function rnd(n) { return (Math.random() * 2 - 1) * n; }
+
+  async function init() {
+    const wall = document.getElementById('polaroid-wall');
+    if (!wall) return;
+
+    let images = [];
+    try {
+      const res = await fetch('IMG/manifest.json');
+      if (!res.ok) throw new Error('manifest missing');
+      images = await res.json();
+    } catch (e) {
+      console.warn('Polaroid Wall: manifest.json not found.', e);
+      wall.style.display = 'none';
+      return;
+    }
+
+    if (!images.length) { wall.style.display = 'none'; return; }
+
+    /* Reuse existing lightbox DOM directly (openLightbox is scoped inside carousel IIFE) */
+    const lightbox    = document.getElementById('img-lightbox');
+    const lightboxImg = document.getElementById('img-lightbox-img');
+
+    function openLb(src) {
+      if (!lightbox || !lightboxImg) return;
+      lightboxImg.src = src;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    images.forEach((src, i) => {
+      const caption = CAPTIONS[i] || '🌸';
+
+      /* Outer wrapper — perspective host + scatter rotation */
+      const polaroid = document.createElement('div');
+      polaroid.className = 'pw-polaroid loading';
+
+      const rot = ROTATIONS[i % ROTATIONS.length];
+      const tx  = rnd(8);
+      const ty  = rnd(8);
+      polaroid.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg)`;
+
+      /* Card inner — the element that physically flips */
+      const inner = document.createElement('div');
+      inner.className = 'pw-card-inner';
+
+      /* ── FRONT face ── */
+      const front = document.createElement('div');
+      front.className = 'pw-face-front';
+
+      const photoWrap = document.createElement('div');
+      photoWrap.className = 'pw-photo-wrap';
+
+      const img = document.createElement('img');
+      img.alt = 'Memory ' + (i + 1);
+      img.draggable = false;
+      img.loading = 'lazy';
+      img.onload  = () => polaroid.classList.remove('loading');
+      img.onerror = () => polaroid.classList.remove('loading');
+      img.src = src;
+
+      photoWrap.appendChild(img);
+      front.appendChild(photoWrap);
+
+      /* ── BACK face ── */
+      const back = document.createElement('div');
+      back.className = 'pw-face-back';
+
+      const captionEl = document.createElement('p');
+      captionEl.className = 'pw-caption';
+      captionEl.textContent = caption;
+
+      const thumb = document.createElement('img');
+      thumb.className = 'pw-back-thumb';
+      thumb.src = src;
+      thumb.alt = 'Open full photo';
+      thumb.draggable = false;
+      thumb.setAttribute('role', 'button');
+      thumb.setAttribute('aria-label', 'View full photo');
+      thumb.addEventListener('click', e => {
+        e.stopPropagation(); /* prevent flip-back */
+        openLb(src);
+      });
+
+      const hint = document.createElement('span');
+      hint.className = 'pw-back-hint';
+      hint.textContent = 'tap photo to enlarge';
+
+      back.appendChild(captionEl);
+      back.appendChild(thumb);
+      back.appendChild(hint);
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      polaroid.appendChild(inner);
+      wall.appendChild(polaroid);
+
+      /* ── CLICK — flip toggle ── */
+      polaroid.addEventListener('click', () => {
+        /* Clear inline tilt so CSS class transform takes over cleanly */
+        inner.style.transform = '';
+        polaroid.classList.toggle('flipped');
+      });
+
+      /* ── HOVER 3D TILT (desktop only — no mousemove on touch) ── */
+      polaroid.addEventListener('mousemove', e => {
+        if (polaroid.classList.contains('flipped')) return;
+        const rect = polaroid.getBoundingClientRect();
+        const nx = (e.clientX - (rect.left + rect.width  / 2)) / (rect.width  / 2);
+        const ny = (e.clientY - (rect.top  + rect.height / 2)) / (rect.height / 2);
+        inner.style.transform = `rotateX(${-ny * TILT_MAX}deg) rotateY(${nx * TILT_MAX}deg)`;
+      });
+
+      polaroid.addEventListener('mouseleave', () => {
+        inner.style.transform = '';
+      });
+    });
+  }
+
+  init();
+})();
+</script>
+
 <!-- ══ CUTENESS METER SCRIPT ══ -->
 <script>
 function startCutenessMeter() {
-  const overlay  = document.getElementById('cuteness-overlay');
-  const bar      = document.getElementById('cm-bar');
-  const pctEl    = document.getElementById('cm-percent');
-  const warning  = document.getElementById('cm-warning');
+  const overlay    = document.getElementById('cuteness-overlay');
+  const bar        = document.getElementById('cm-bar');
+  const pctEl      = document.getElementById('cm-percent');
+  const warning    = document.getElementById('cm-warning');
+  const resultCard = document.getElementById('cm-result-card');
 
   // reset state
   bar.style.width = '0%';
@@ -2749,8 +2655,19 @@ function startCutenessMeter() {
   pctEl.classList.remove('overflow');
   pctEl.innerHTML = '0<span>%</span>';
   warning.classList.remove('show');
+  resultCard.classList.remove('show');
+  resultCard.style.display = 'none';
 
+  overlay.style.opacity = '0';
   overlay.classList.add('active');
+
+  // Fade in then scroll to it
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '1';
+      overlay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 
   const TARGET   = 150;
   const DURATION = 3800; // ms to reach 150%
@@ -2780,7 +2697,7 @@ function startCutenessMeter() {
     if (progress < 1) {
       requestAnimationFrame(step);
     } else {
-      // maxed out — show warning + shake
+      // maxed out — show warning + shake + result card
       done = true;
       bar.style.width = '100%';
       pctEl.innerHTML = '150<span>%</span>';
@@ -2793,7 +2710,22 @@ function startCutenessMeter() {
         document.body.addEventListener('animationend', () => {
           document.body.classList.remove('shaking');
         }, { once: true });
+
+        setTimeout(() => {
+          warning.classList.remove('show');
+        }, 5000);
       }, 150);
+
+      // Show result card after warning appears
+      setTimeout(() => {
+        resultCard.style.display = 'flex';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            resultCard.classList.add('show');
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        });
+      }, 900);
     }
   }
 
@@ -2801,148 +2733,5 @@ function startCutenessMeter() {
 }
 </script>
 
-<!-- ══ COUNTDOWN OVERLAY SCRIPT ══ -->
-<script>
-(function () {
-  const UNLOCK_DATE = new Date(2026, 3, 7, 23, 55, 0); // April 7 2026 23:55:00 local time
-  const SECRET_PIN  = '22411871';
-
-  const overlay  = document.getElementById('countdown-overlay');
-  if (SKIP_TO_REVEAL) return;
-  const daysEl   = document.getElementById('cd-days');
-  const hoursEl  = document.getElementById('cd-hours');
-  const minsEl   = document.getElementById('cd-mins');
-  const secsEl   = document.getElementById('cd-secs');
-  const errorEl  = document.getElementById('cd-pin-error');
-  const petals   = document.getElementById('cd-petals');
-
-  let pinBuffer = '';
-
-  /* ── petals ── */
-  const PETAL_CHARS = ['🌸','🌷','✦','❀','✿','❋','🌺','·'];
-  for (let i = 0; i < 18; i++) {
-    const p = document.createElement('span');
-    p.className = 'cd-petal';
-    p.textContent = PETAL_CHARS[Math.floor(Math.random() * PETAL_CHARS.length)];
-    p.style.left     = Math.random() * 100 + 'vw';
-    p.style.fontSize = (0.9 + Math.random() * 1.2) + 'rem';
-    p.style.animationDuration  = (9 + Math.random() * 16) + 's';
-    p.style.animationDelay     = -(Math.random() * 18) + 's';
-    p.style.opacity = 0;
-    petals.appendChild(p);
-  }
-
-  /* ── countdown ── */
-  function pad(n) { return String(n).padStart(2, '0'); }
-
-  function tick() {
-    const now  = new Date();
-    const diff = UNLOCK_DATE - now;
-
-    if (diff <= 0) {
-      unlockSite();
-      return;
-    }
-
-    const totalSecs = Math.floor(diff / 1000);
-    const s = totalSecs % 60;
-    const m = Math.floor(totalSecs / 60) % 60;
-    const h = Math.floor(totalSecs / 3600) % 24;
-    const d = Math.floor(totalSecs / 86400);
-
-    daysEl.textContent  = pad(d);
-    hoursEl.textContent = pad(h);
-    minsEl.textContent  = pad(m);
-    secsEl.textContent  = pad(s);
-  }
-
-  tick();
-  setInterval(tick, 1000);
-
-  /* ── PIN keypad ── */
-  function updateDots() {
-    for (let i = 0; i < 4; i++) {
-      const dot = document.getElementById('dot-' + i);
-      dot.classList.toggle('filled', i < pinBuffer.length);
-    }
-  }
-
-  function shakeDots() {
-    const dotsEl = document.getElementById('cd-pin-dots');
-    dotsEl.style.animation = 'none';
-    dotsEl.offsetHeight; // reflow
-    dotsEl.style.animation = 'pinShake 0.45s ease';
-  }
-
-  /* inject pin shake keyframe */
-  const shakeStyle = document.createElement('style');
-  shakeStyle.textContent = `
-    @keyframes pinShake {
-      0%,100% { transform: translateX(0); }
-      20%     { transform: translateX(-8px); }
-      40%     { transform: translateX(8px); }
-      60%     { transform: translateX(-5px); }
-      80%     { transform: translateX(5px); }
-    }`;
-  document.head.appendChild(shakeStyle);
-
-  function pressDigit(d) {
-    if (pinBuffer.length >= 8) return;
-    pinBuffer += d;
-    updateDots();
-
-    if (pinBuffer.length === 8) {
-      if (pinBuffer === SECRET_PIN) {
-        unlockSite();
-      } else {
-        errorEl.classList.add('show');
-        shakeDots();
-        setTimeout(() => {
-          pinBuffer = '';
-          updateDots();
-          errorEl.classList.remove('show');
-        }, 1200);
-      }
-    }
-  }
-
-  function pressDelete() {
-    if (pinBuffer.length > 0) {
-      pinBuffer = pinBuffer.slice(0, -1);
-      updateDots();
-      errorEl.classList.remove('show');
-    }
-  }
-
-  document.getElementById('cd-keypad').addEventListener('click', function (e) {
-    const btn = e.target.closest('.cd-key');
-    if (!btn) return;
-    btn.classList.add('pressed');
-    setTimeout(() => btn.classList.remove('pressed'), 150);
-    const action = btn.dataset.action;
-    if (action === 'del') {
-      pressDelete();
-    } else {
-      pressDigit(btn.dataset.digit);
-    }
-  });
-
-  /* physical keyboard support */
-  document.addEventListener('keydown', function (e) {
-    if (!overlay.isConnected || overlay.classList.contains('unlocking')) return;
-    if (/^[0-9]$/.test(e.key)) { pressDigit(e.key); }
-    else if (e.key === 'Backspace') { pressDelete(); }
-  });
-
-  /* ── unlock ── */
-  function unlockSite() {
-    overlay.classList.add('unlocking');
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      overlay.remove();
-    }, 900);
-  }
-})();
-</script>
 </body>
 </html>
